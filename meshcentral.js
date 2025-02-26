@@ -773,81 +773,89 @@ function CreateMeshCentralServer(config, args) {
         if (obj.args.vault) {
             if (obj.args.vault.endpoint == null) { console.log('Missing Vault endpoint.'); process.exit(); return; }
             if (obj.args.vault.token == null) { console.log('Missing Vault token.'); process.exit(); return; }
-            if (obj.args.vault.unsealkey == null) { console.log('Missing Vault unsealkey.'); process.exit(); return; }
             if (obj.args.vault.name == null) { obj.args.vault.name = 'meshcentral'; }
-
+            
             // Get new instance of the client
             const vault = require("node-vault")({ endpoint: obj.args.vault.endpoint, token: obj.args.vault.token });
-            vault.unseal({ key: obj.args.vault.unsealkey })
-                .then(function () {
-                    if (obj.args.vaultdeleteconfigfiles) {
-                        vault.delete('secret/data/' + obj.args.vault.name)
+            
+            const performVaultOperation = function () {
+                if (obj.args.vaultdeleteconfigfiles) {
+                    vault.delete('secret/data/' + obj.args.vault.name)
+                        .then(function (r) { console.log('Done.'); process.exit(); })
+                        .catch(function (x) { console.log(x); process.exit(); });
+                } else if (obj.args.vaultpushconfigfiles) {
+                    // Push configuration files into Vault
+                    if ((obj.args.vaultpushconfigfiles == '*') || (obj.args.vaultpushconfigfiles === true)) { obj.args.vaultpushconfigfiles = obj.datapath; }
+                    obj.fs.readdir(obj.args.vaultpushconfigfiles, function (err, files) {
+                        if (err != null) { console.log('ERROR: Unable to read from folder ' + obj.args.vaultpushconfigfiles); process.exit(); return; }
+                        var configFound = false;
+                        for (var i in files) { if (files[i] == 'config.json') { configFound = true; } }
+                        if (configFound == false) { console.log('ERROR: No config.json in folder ' + obj.args.vaultpushconfigfiles); process.exit(); return; }
+                        var configFiles = {};
+                        for (var i in files) {
+                            const file = files[i];
+                            if ((file == 'config.json') || file.endsWith('.key') || file.endsWith('.crt') || (file == 'terms.txt') || file.endsWith('.jpg') || file.endsWith('.png')) {
+                                const path = obj.path.join(obj.args.vaultpushconfigfiles, files[i]), binary = Buffer.from(obj.fs.readFileSync(path, { encoding: 'binary' }), 'binary');
+                                console.log('Pushing ' + file + ', ' + binary.length + ' bytes.');
+                                if (file.endsWith('.json') || file.endsWith('.key') || file.endsWith('.crt')) { configFiles[file] = binary.toString(); } else { configFiles[file] = binary.toString('base64'); }
+                            }
+                        }
+                        vault.write('secret/data/' + obj.args.vault.name, { "data": configFiles })
                             .then(function (r) { console.log('Done.'); process.exit(); })
                             .catch(function (x) { console.log(x); process.exit(); });
-                    } else if (obj.args.vaultpushconfigfiles) {
-                        // Push configuration files into Vault
-                        if ((obj.args.vaultpushconfigfiles == '*') || (obj.args.vaultpushconfigfiles === true)) { obj.args.vaultpushconfigfiles = obj.datapath; }
-                        obj.fs.readdir(obj.args.vaultpushconfigfiles, function (err, files) {
-                            if (err != null) { console.log('ERROR: Unable to read from folder ' + obj.args.vaultpushconfigfiles); process.exit(); return; }
-                            var configFound = false;
-                            for (var i in files) { if (files[i] == 'config.json') { configFound = true; } }
-                            if (configFound == false) { console.log('ERROR: No config.json in folder ' + obj.args.vaultpushconfigfiles); process.exit(); return; }
-                            var configFiles = {};
-                            for (var i in files) {
-                                const file = files[i];
-                                if ((file == 'config.json') || file.endsWith('.key') || file.endsWith('.crt') || (file == 'terms.txt') || file.endsWith('.jpg') || file.endsWith('.png')) {
-                                    const path = obj.path.join(obj.args.vaultpushconfigfiles, files[i]), binary = Buffer.from(obj.fs.readFileSync(path, { encoding: 'binary' }), 'binary');
-                                    console.log('Pushing ' + file + ', ' + binary.length + ' bytes.');
-                                    if (file.endsWith('.json') || file.endsWith('.key') || file.endsWith('.crt')) { configFiles[file] = binary.toString(); } else { configFiles[file] = binary.toString('base64'); }
+                    });
+                } else {
+                    // Read configuration files from Vault
+                    vault.read('secret/data/' + obj.args.vault.name)
+                        .then(function (r) {
+                            if ((r == null) || (r.data == null) || (r.data.data == null)) { console.log('Unable to read configuration from Vault.'); process.exit(); return; }
+                            var configFiles = obj.configurationFiles = r.data.data;
+
+                            // Decode Base64 when needed
+                            for (var file in configFiles) { if (!file.endsWith('.json') && !file.endsWith('.key') && !file.endsWith('.crt')) { configFiles[file] = Buffer.from(configFiles[file], 'base64'); } }
+
+                            // Save all of the files
+                            if (obj.args.vaultpullconfigfiles) {
+                                for (var i in configFiles) {
+                                    var fullFileName = obj.path.join(obj.args.vaultpullconfigfiles, i);
+                                    try { obj.fs.writeFileSync(fullFileName, configFiles[i]); } catch (ex) { console.log('Unable to write to ' + fullFileName); process.exit(); return; }
+                                    console.log('Pulling ' + i + ', ' + configFiles[i].length + ' bytes.');
                                 }
+                                console.log('Done.');
+                                process.exit();
                             }
-                            vault.write('secret/data/' + obj.args.vault.name, { "data": configFiles })
-                                .then(function (r) { console.log('Done.'); process.exit(); })
-                                .catch(function (x) { console.log(x); process.exit(); });
-                        });
-                    } else {
-                        // Read configuration files from Vault
-                        vault.read('secret/data/' + obj.args.vault.name)
-                            .then(function (r) {
-                                if ((r == null) || (r.data == null) || (r.data.data == null)) { console.log('Unable to read configuration from Vault.'); process.exit(); return; }
-                                var configFiles = obj.configurationFiles = r.data.data;
 
-                                // Decode Base64 when needed
-                                for (var file in configFiles) { if (!file.endsWith('.json') && !file.endsWith('.key') && !file.endsWith('.crt')) { configFiles[file] = Buffer.from(configFiles[file], 'base64'); } }
+                            // Parse the new configuration file
+                            var config2 = null;
+                            try { config2 = JSON.parse(configFiles['config.json']); } catch (ex) { console.log('Error, unable to parse config.json from Vault.'); process.exit(); return; }
 
-                                // Save all of the files
-                                if (obj.args.vaultpullconfigfiles) {
-                                    for (var i in configFiles) {
-                                        var fullFileName = obj.path.join(obj.args.vaultpullconfigfiles, i);
-                                        try { obj.fs.writeFileSync(fullFileName, configFiles[i]); } catch (ex) { console.log('Unable to write to ' + fullFileName); process.exit(); return; }
-                                        console.log('Pulling ' + i + ', ' + configFiles[i].length + ' bytes.');
-                                    }
-                                    console.log('Done.');
-                                    process.exit();
-                                }
+                            // Set the command line arguments to the config file if they are not present
+                            if (!config2.settings) { config2.settings = {}; }
+                            for (var i in args) { config2.settings[i] = args[i]; }
+                            obj.args = args = config2.settings;
 
-                                // Parse the new configuration file
-                                var config2 = null;
-                                try { config2 = JSON.parse(configFiles['config.json']); } catch (ex) { console.log('Error, unable to parse config.json from Vault.'); process.exit(); return; }
+                            // Lower case all keys in the config file
+                            obj.common.objKeysToLower(config2, ['ldapoptions', 'defaultuserwebstate', 'forceduserwebstate', 'httpheaders', 'telegram/proxy']);
 
-                                // Set the command line arguments to the config file if they are not present
-                                if (!config2.settings) { config2.settings = {}; }
-                                for (var i in args) { config2.settings[i] = args[i]; }
-                                obj.args = args = config2.settings;
+                            // Grad some of the values from the original config.json file if present.
+                            if ((config.settings.vault != null) && (config2.settings != null)) { config2.settings.vault = config.settings.vault; }
 
-                                // Lower case all keys in the config file
-                                obj.common.objKeysToLower(config2, ['ldapoptions', 'defaultuserwebstate', 'forceduserwebstate', 'httpheaders', 'telegram/proxy']);
+                            // We got a new config.json from the database, let's use it.
+                            config = obj.config = config2;
+                            obj.StartEx();
+                        })
+                        .catch(function (x) { console.log(x); process.exit(); });
+                }
+            };
 
-                                // Grad some of the values from the original config.json file if present.
-                                if ((config.settings.vault != null) && (config2.settings != null)) { config2.settings.vault = config.settings.vault; }
+            vault.status().then(function (res) {
+                if(res.sealed) {
+                    if (obj.args.vault.unsealkey == null) { console.log('Missing Vault unsealkey.'); process.exit(); return; } // TODO: handle multiple keys                  
+                    vault.unseal({ key: obj.args.vault.unsealkey })
+                        .then(performVaultOperation).catch(function (x) { console.log(x); process.exit(); });
+                } else performVaultOperation();
 
-                                // We got a new config.json from the database, let's use it.
-                                config = obj.config = config2;
-                                obj.StartEx();
-                            })
-                            .catch(function (x) { console.log(x); process.exit(); });
-                    }
-                }).catch(function (x) { console.log(x); process.exit(); });
+            }).catch(function (x) { console.log(x); process.exit(); });
             return;
         }
     }
