@@ -2134,7 +2134,7 @@ function serverConnect() {
                     if ((args.id.split('/') != 3) && (settings.currentDomain != null)) { args.id = 'node/' + settings.currentDomain + '/' + args.id; }
                     var id = getRandomHex(6);
                     ws.send(JSON.stringify({ action: 'msg', nodeid: args.id, type: 'tunnel', usage: 1, value: '*/meshrelay.ashx?p=' + protocol + '&nodeid=' + args.id + '&id=' + id + '&rauth=' + data.rcookie, responseid: 'meshctrl' }));
-                    connectTunnel(url.replace('/control.ashx', '/meshrelay.ashx?browser=1&p=' + protocol + '&nodeid=' + args.id + '&id=' + id + '&auth=' + data.cookie));
+                    connectTunnel(url.replace('/control.ashx', '/meshrelay.ashx?browser=1&p=' + protocol + '&nodeid=' + encodeURIComponent(args.id) + '&id=' + id + '&auth=' + data.cookie));
                 }
                 break;
             }
@@ -2242,7 +2242,7 @@ function serverConnect() {
             case 'removeuserfromusergroup':
             case 'removeDeviceShare':
             case 'userbroadcast': { // BROADCAST
-                if ((settings.cmd == 'shell') || (settings.cmd == 'upload') || (settings.cmd == 'download')) return;
+                if (((settings.cmd == 'shell') || (settings.cmd == 'upload') || (settings.cmd == 'download')) && (data.result == 'OK')) return;
                 if ((data.type == 'runcommands') && (settings.cmd != 'runcommand')) return;
                 if ((settings.multiresponse != null) && (settings.multiresponse > 1)) { settings.multiresponse--; break; }
                 if (data.responseid == 'meshctrl') {
@@ -2401,10 +2401,10 @@ function serverConnect() {
                                 for (var j in devicesInMesh) {
                                     var n = devicesInMesh[j];
                                     nodecount++;
-                                    if (settings.xmeshes) {
+                                    if (settings.xmeshes && settings.xmeshes[i]) {
                                         console.log('\"' + settings.xmeshes[i]._id.split('/')[2] + '\",\"' + settings.xmeshes[i].name.split('\"').join('') + '\",\"' + n._id.split('/')[2] + '\",\"' + n.name.split('\"').join('') + '\",' + (n.icon ? n.icon : 0) + ',' + (n.conn ? n.conn : 0) + ',' + (n.pwr ? n.pwr : 0));
                                     } else {
-                                        console.log('\"' + n._id.split('/')[2] + '\",\"' + n.name.split('\"').join('') + '\",' + (n.icon ? n.icon : 0) + ',' + (n.conn ? n.conn : 0) + ',' + (n.pwr ? n.pwr : 0));
+                                        console.log('\"\",\"\",\"' + n._id.split('/')[2] + '\",\"' + n.name.split('\"').join('') + '\",' + (n.icon ? n.icon : 0) + ',' + (n.conn ? n.conn : 0) + ',' + (n.pwr ? n.pwr : 0));
                                     }
                                 }
                             }
@@ -2433,7 +2433,7 @@ function serverConnect() {
                             for (var i in data.nodes) {
                                 var devicesInMesh = data.nodes[i];
                                 if (devicesInMesh.length > 0) {
-                                    if (settings.xmeshes) { console.log('\r\nDevice group: \"' + settings.xmeshes[i].name.split('\"').join('') + '\"'); }
+                                    if (settings.xmeshes && settings.xmeshes[i] && settings.xmeshes[i].name) { console.log('\r\nDevice group: \"' + settings.xmeshes[i].name.split('\"').join('') + '\"'); }
                                     console.log('id, name, icon, conn, pwr\r\n-------------------------');
                                     for (var j in devicesInMesh) {
                                         var n = devicesInMesh[j];
@@ -2662,7 +2662,7 @@ function getDevicesThatMatchFilter(nodes, x) {
         for (var d in nodes) { if ((nodes[d].ip != null) && (nodes[d].ip.indexOf(ipSearch) >= 0)) { r.push(nodes[d]); } }
     } else if (groupSearch != null) {
         // Group filter
-        if (settings.xmeshes) { for (var d in nodes) { if (settings.xmeshes[nodes[d].meshid].name.toLowerCase().indexOf(groupSearch) >= 0) { r.push(nodes[d]); } } }
+        if (settings.xmeshes) { for (var d in nodes) { if (settings.xmeshes[nodes[d].meshid] && settings.xmeshes[nodes[d].meshid].name.toLowerCase().indexOf(groupSearch) >= 0) { r.push(nodes[d]); } } }
     } else if (tagSearch != null) {
         // Tag filter
         for (var d in nodes) {
@@ -2958,7 +2958,7 @@ function displayDeviceInfo(sysinfo, lastconnect, network, nodes) {
     // MeshAgent
     if (node.agent) {
         var output = {}, outputCount = 0;
-        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service"];
+        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service", "ARMVIRT32 (OpenWRT)", "RISC-V x86-64"];
         if ((node.agent != null) && (node.agent.id != null) && (node.agent.ver != null)) {
             var str = '';
             if (node.agent.id <= agentsStr.length) { str = agentsStr[node.agent.id]; } else { str = agentsStr[0]; }

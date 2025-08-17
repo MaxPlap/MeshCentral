@@ -583,6 +583,8 @@ function CreateMeshCentralServer(config, args) {
     // Launch MeshCentral as a child server and monitor it.
     obj.launchChildServer = function (startArgs) {
         const child_process = require('child_process');
+        const isInspectorAttached = (()=> { try { return require('node:inspector').url() !== undefined; } catch (_) { return false; } }).call();
+        const logFromChildProcess = isInspectorAttached ? () => {} : console.log.bind(console);
         try { if (process.traceDeprecation === true) { startArgs.unshift('--trace-deprecation'); } } catch (ex) { }
         try { if (process.traceProcessWarnings === true) { startArgs.unshift('--trace-warnings'); } } catch (ex) { }
         if (startArgs[0] != "--disable-proto=delete") startArgs.unshift("--disable-proto=delete")
@@ -657,12 +659,12 @@ function CreateMeshCentralServer(config, args) {
             else if (data.indexOf('Starting self upgrade to: ') >= 0) { obj.args.specificupdate = data.substring(26).split('\r')[0].split('\n')[0]; childProcess.xrestart = 3; }
             var datastr = data;
             while (datastr.endsWith('\r') || datastr.endsWith('\n')) { datastr = datastr.substring(0, datastr.length - 1); }
-            console.log(datastr);
+            logFromChildProcess(datastr);
         });
         childProcess.stderr.on('data', function (data) {
             var datastr = data;
             while (datastr.endsWith('\r') || datastr.endsWith('\n')) { datastr = datastr.substring(0, datastr.length - 1); }
-            console.log('ERR: ' + datastr);
+            logFromChildProcess('ERR: ' + datastr);
             if (data.startsWith('le.challenges[tls-sni-01].loopback')) { return; } // Ignore this error output from GreenLock
             if (data[data.length - 1] == '\n') { data = data.substring(0, data.length - 1); }
             obj.logError(data);
@@ -861,7 +863,7 @@ function CreateMeshCentralServer(config, args) {
     }
 
     // Look for easy command line instructions and do them here.
-    obj.StartEx = function () {
+    obj.StartEx = async function () {
         var i;
         //var wincmd = require('node-windows');
         //wincmd.list(function (svc) { console.log(svc); }, true);
@@ -921,6 +923,13 @@ function CreateMeshCentralServer(config, args) {
         if ((typeof obj.args.agentupdateblocksize == 'number') && (obj.args.agentupdateblocksize >= 1024) && (obj.args.agentupdateblocksize <= 65531)) { obj.agentUpdateBlockSize = obj.args.agentupdateblocksize; }
         if (typeof obj.args.trustedproxy == 'string') { obj.args.trustedproxy = obj.args.trustedproxy.split(' ').join('').split(','); }
         if (typeof obj.args.tlsoffload == 'string') { obj.args.tlsoffload = obj.args.tlsoffload.split(' ').join('').split(','); }
+
+        // Check IP lists and ranges and if DNS return IP addresses
+        config.settings.userallowedip = await resolveDomainsToIps(config.settings.userallowedip);
+        config.settings.userblockedip = await resolveDomainsToIps(config.settings.userblockedip);
+        config.settings.agentallowedip = await resolveDomainsToIps(config.settings.agentallowedip);
+        config.settings.agentblockedip = await resolveDomainsToIps(config.settings.agentblockedip);
+        config.settings.swarmallowedip = await resolveDomainsToIps(config.settings.swarmallowedip);
 
         // Check the "cookieIpCheck" value
         if ((obj.args.cookieipcheck === false) || (obj.args.cookieipcheck == 'none')) { obj.args.cookieipcheck = 'none'; }
@@ -1003,7 +1012,7 @@ function CreateMeshCentralServer(config, args) {
                             if (err != null) { console.log("Database error: " + err); process.exit(); return; }
                             if ((docs == null) || (docs.length == 0)) { console.log("Unknown userid, usage: --resetaccount [userid] --domain (domain) --pass [password]."); process.exit(); return; }
                             const user = docs[0]; if ((user.siteadmin) && (user.siteadmin != 0xFFFFFFFF) && (user.siteadmin & 32) != 0) { user.siteadmin -= 32; } // Unlock the account.
-                            delete user.phone; delete user.otpekey; delete user.otpsecret; delete user.otpkeys; delete user.otphkeys; delete user.otpdev; delete user.otpsms; delete user.otpmsg; // Disable 2FA
+                            delete user.phone; delete user.otpekey; delete user.otpsecret; delete user.otpkeys; delete user.otphkeys; delete user.otpdev; delete user.otpsms; delete user.otpmsg; user.otpduo; // Disable 2FA
                             delete user.msghandle; // Disable users 2fa messaging too
                             var config = getConfig(false);
                             if (config.domains[user.domain].auth || config.domains[user.domain].authstrategies) {
@@ -1478,6 +1487,11 @@ function CreateMeshCentralServer(config, args) {
             if (typeof obj.config.domains[i].userblockedip == 'string') { if (obj.config.domains[i].userblockedip == '') { delete obj.config.domains[i].userblockedip; } else { obj.config.domains[i].userblockedip = obj.config.domains[i].userblockedip.split(' ').join('').split(','); } }
             if (typeof obj.config.domains[i].agentallowedip == 'string') { if (obj.config.domains[i].agentallowedip == '') { delete obj.config.domains[i].agentallowedip; } else { obj.config.domains[i].agentallowedip = obj.config.domains[i].agentallowedip.split(' ').join('').split(','); } }
             if (typeof obj.config.domains[i].agentblockedip == 'string') { if (obj.config.domains[i].agentblockedip == '') { delete obj.config.domains[i].agentblockedip; } else { obj.config.domains[i].agentblockedip = obj.config.domains[i].agentblockedip.split(' ').join('').split(','); } }
+            // Check IP lists and ranges and if DNS return IP addresses
+            obj.config.domains[i].userallowedip = await resolveDomainsToIps(obj.config.domains[i].userallowedip);
+            obj.config.domains[i].userblockedip = await resolveDomainsToIps(obj.config.domains[i].userblockedip);
+            obj.config.domains[i].agentallowedip = await resolveDomainsToIps(obj.config.domains[i].agentallowedip);
+            obj.config.domains[i].agentblockedip = await resolveDomainsToIps(obj.config.domains[i].agentblockedip);
             if (typeof obj.config.domains[i].ignoreagenthashcheck == 'string') { if (obj.config.domains[i].ignoreagenthashcheck == '') { delete obj.config.domains[i].ignoreagenthashcheck; } else { obj.config.domains[i].ignoreagenthashcheck = obj.config.domains[i].ignoreagenthashcheck.split(','); } }
             if (typeof obj.config.domains[i].allowedorigin == 'string') { if (obj.config.domains[i].allowedorigin == '') { delete obj.config.domains[i].allowedorigin; } else { obj.config.domains[i].allowedorigin = obj.config.domains[i].allowedorigin.split(','); } }
             if ((obj.config.domains[i].passwordrequirements != null) && (typeof obj.config.domains[i].passwordrequirements == 'object')) {
@@ -2090,14 +2104,19 @@ function CreateMeshCentralServer(config, args) {
                                 ca: Object.keys(obj.webserver.wsagents).length,
                                 cu: Object.keys(obj.webserver.wssessions).length,
                                 us: Object.keys(obj.webserver.wssessions2).length,
-                                rs: obj.webserver.relaySessionCount
+                                rs: obj.webserver.relaySessionCount,
+                                am: 0
                             },
                             traffic: trafficStats.delta
                         };
                         try { data.cpu = require('os').loadavg(); } catch (ex) { }
                         if (obj.mpsserver != null) {
-                            data.conn.am = 0;
-                            for (var i in obj.mpsserver.ciraConnections) { data.conn.am += obj.mpsserver.ciraConnections[i].length; }
+                            data.conn.amc = 0;
+                            for (var i in obj.mpsserver.ciraConnections) { data.conn.amc += obj.mpsserver.ciraConnections[i].length; }
+                        }
+                        for (var i in obj.connectivityByNode) {
+                            const node = obj.connectivityByNode[i];
+                            if (node && typeof node.connectivity !== 'undefined' && node.connectivity === 4) { data.conn.am++; }
                         }
                         if (obj.firstStats === true) { delete obj.firstStats; data.first = true; }
                         if (obj.multiServer != null) { data.s = obj.multiServer.serverid; }
@@ -2109,10 +2128,10 @@ function CreateMeshCentralServer(config, args) {
                     if (obj.args.nousers == true) { obj.updateServerState('nousers', '1'); }
                     obj.updateServerState('state', "running");
 
-                    // Setup auto-backup defaults
-                    if (obj.config.settings.autobackup == false || obj.config.settings.autobackup == 'false') { obj.config.settings.autobackup = {backupintervalhours: 0}; } //no schedule, but able to console autobackup
+                    // Setup auto-backup defaults. Unless autobackup is set to false try to make a backup.
+                    if (obj.config.settings.autobackup == false || obj.config.settings.autobackup == 'false') { obj.config.settings.autobackup = {backupintervalhours: -1}; } //block all autobackup functions
                     else {
-                        if (obj.config.settings.autobackup == null || obj.config.settings.autobackup === true) { obj.config.settings.autobackup = {backupintervalhours: 24, keeplastdaysbackup: 10}; };
+                        if (typeof obj.config.settings.autobackup != 'object') { obj.config.settings.autobackup = {}; };
                         if (typeof obj.config.settings.autobackup.backupintervalhours != 'number') { obj.config.settings.autobackup.backupintervalhours = 24; };
                         if (typeof obj.config.settings.autobackup.keeplastdaysbackup != 'number') { obj.config.settings.autobackup.keeplastdaysbackup = 10; };
                         if (obj.config.settings.autobackup.backuphour != null ) { obj.config.settings.autobackup.backupintervalhours = 24; if ((typeof obj.config.settings.autobackup.backuphour != 'number') || (obj.config.settings.autobackup.backuphour > 23 || obj.config.settings.autobackup.backuphour < 0 )) { obj.config.settings.autobackup.backuphour = 0; }}
@@ -2124,6 +2143,12 @@ function CreateMeshCentralServer(config, args) {
                         else if (typeof obj.config.settings.autobackup.backupskipfoldersglob == 'string') { obj.config.settings.autobackup.backupskipfoldersglob = obj.config.settings.autobackup.backupskipfoldersglob.replaceAll(', ', ',').split(','); };
                         if (typeof obj.config.settings.autobackup.backuppath == 'string') { obj.backuppath = (obj.config.settings.autobackup.backuppath = (obj.path.resolve(obj.config.settings.autobackup.backuppath))) } else { obj.config.settings.autobackup.backuppath = obj.backuppath };
                         if (typeof obj.config.settings.autobackup.backupname != 'string') { obj.config.settings.autobackup.backupname = 'meshcentral-autobackup-'};
+                        if (typeof obj.config.settings.autobackup.webdav == 'object') {
+                            //make webdav compliant: http://www.webdav.org/specs/rfc4918.html#rfc.section.5.2, http://www.webdav.org/specs/rfc2518.html#METHOD_MKCOL
+                            // So with leading and trailing slash in the foldername, and no double and backslashes
+                            if (typeof obj.config.settings.autobackup.webdav.foldername != 'string') {obj.config.settings.autobackup.webdav.foldername = '/MeshCentral-Backups/'}
+                            else {obj.config.settings.autobackup.webdav.foldername = ('/' + obj.config.settings.autobackup.webdav.foldername + '/').replaceAll("\\", "/").replaceAll("//", "/").replaceAll("//", "/")};
+                        }
                     }
 
                     // Check if the database is capable of performing a backup
@@ -2761,7 +2786,7 @@ function CreateMeshCentralServer(config, args) {
     // Clear the connectivity state of a node and setup the server so that messages can be routed correctly.
     // meshId: mesh identifier of format mesh/domain/meshidhex
     // nodeId: node identifier of format node/domain/nodeidhex
-    // connectType: Bitmask, 1 = MeshAgent, 2 = Intel AMT CIRA, 3 = Intel AMT local.
+    // connectType: Bitmask, 1 = MeshAgent, 2 = Intel AMT CIRA, 4 = Intel AMT local.
     obj.ClearConnectivityState = function (meshid, nodeid, connectType, serverid, extraInfo) {
         //console.log('ClearConnectivity for ' + nodeid.substring(0, 16) + ', Type: ' + connectTypeStrings[connectType] + (serverid == null?(''):(', ServerId: ' + serverid)));
         if ((serverid == null) && (obj.multiServer != null)) { obj.multiServer.DispatchMessage({ action: 'ClearConnectivityState', meshid: meshid, nodeid: nodeid, connectType: connectType, extraInfo: extraInfo }); }
@@ -3211,6 +3236,8 @@ function CreateMeshCentralServer(config, args) {
         41: { id: 41, localname: 'meshagent_aarch64-cortex-a53', rname: 'meshagent', desc: 'ARMADA/CORTEX-A53/MUSL (OpenWRT)', update: true, amt: false, platform: 'linux', core: 'linux-noamt', rcore: 'linux-recovery', arcore: 'linux-agentrecovery', tcore: 'linux-tiny' }, // OpenWRT Routers
         42: { id: 42, localname: 'MeshConsoleARM64.exe', rname: 'meshconsolearm64.exe', desc: 'Windows ARM-64 console', update: true, amt: true, platform: 'win32', core: 'windows-amt', rcore: 'windows-recovery', arcore: 'windows-agentrecovery', tcore: 'windows-tiny' },
         43: { id: 43, localname: 'MeshServiceARM64.exe', rname: 'meshagentarm64.exe', desc: 'Windows ARM-64 service', update: true, amt: true, platform: 'win32', core: 'windows-amt', rcore: 'windows-recovery', arcore: 'windows-agentrecovery', tcore: 'windows-tiny', codesign: true },
+        // 44: { id: 44, localname: 'meshagent_armvirt32', rname: 'meshagent', desc: 'ARMVIRT32 (OpenWRT)', update: true, amt: false, platform: 'linux', core: 'linux-noamt', rcore: 'linux-recovery', arcore: 'linux-agentrecovery', tcore: 'linux-tiny' }, // OpenWRT Routers (agent to be built)
+        45: { id: 45, localname: 'meshagent_riscv64', rname: 'meshagent', desc: 'RISC-V x86-64', update: true, amt: false, platform: 'linux', core: 'linux-noamt', rcore: 'linux-recovery', arcore: 'linux-agentrecovery', tcore: 'linux-tiny' }, // RISC-V 64bit
         10003: { id: 10003, localname: 'MeshService.exe', rname: 'meshagent32.exe', desc: 'Windows x86-32 service', update: true, amt: true, platform: 'win32', core: 'windows-amt', rcore: 'windows-recovery', arcore: 'windows-agentrecovery', tcore: 'windows-tiny', unsigned: true },
         10004: { id: 10004, localname: 'MeshService64.exe', rname: 'meshagent64.exe', desc: 'Windows x86-64 service', update: true, amt: true, platform: 'win32', core: 'windows-amt', rcore: 'windows-recovery', arcore: 'windows-agentrecovery', tcore: 'windows-tiny', unsigned: true },
         10005: { id: 10005, localname: 'meshagent_osx-universal-64', rname: 'meshagent', desc: 'Apple macOS Universal Binary', update: true, amt: false, platform: 'osx', core: 'linux-noamt', rcore: 'linux-recovery', arcore: 'linux-agentrecovery', tcore: 'linux-tiny' }, // Apple Silicon + x86 universal binary
@@ -3415,6 +3442,7 @@ function CreateMeshCentralServer(config, args) {
                             // Failed to sign agent
                             addServerWarning('Failed to sign \"' + agentSignedFunc.objx.meshAgentsArchitectureNumbers[agentSignedFunc.archid].localname + '\": ' + err, 22, [agentSignedFunc.objx.meshAgentsArchitectureNumbers[agentSignedFunc.archid].localname, err]);
                         }
+                        obj.callExternalSignJob(agentSignedFunc.signingArguments); // Call external signing job regardless of success or failure
                         if (--pendingOperations === 0) { agentSignedFunc.func(); }
                     }
                     pendingOperations++;
@@ -3470,7 +3498,10 @@ function CreateMeshCentralServer(config, args) {
                     }
 
                     const signingArguments = { out: signeedagentpath, desc: signDesc, url: signUrl, time: timeStampUrl, proxy: timeStampProxy }; // Shallow clone
+                    signingArguments.resChanges = resChanges;
+
                     obj.debug('main', "Code signing with arguments: " + JSON.stringify(signingArguments));
+                    xagentSignedFunc.signingArguments = signingArguments; // Attach the signing arguments to the callback function
                     if (resChanges == false) {
                         // Sign the agent the simple way, without changing any resources.
                         originalAgent.sign(agentSignCertInfo, signingArguments, xagentSignedFunc);
@@ -3479,14 +3510,38 @@ function CreateMeshCentralServer(config, args) {
                         // NOTE: This is experimental and could corupt the agent.
                         originalAgent.writeExecutable(signingArguments, agentSignCertInfo, xagentSignedFunc);
                     }
+
                 } else {
                     // Signed agent is already ok, use it.
                     originalAgent.close();
                 }
+
+                
             }
         }
 
         if (--pendingOperations === 0) { func(); }
+    }
+
+    obj.callExternalSignJob = function (signingArguments) {
+        if (obj.config.settings && !obj.config.settings.externalsignjob) {
+            return;
+        }
+        obj.debug('main', "External signing job called for file: " + signingArguments.out);
+        
+        const { spawnSync } = require('child_process');
+
+        const signResult = spawnSync('"' + obj.config.settings.externalsignjob + '"', ['"' + signingArguments.out + '"'], {
+            encoding: 'utf-8',
+            shell: true,
+            stdio: 'inherit'
+        }); 
+
+        if (signResult.error || signResult.status !== 0) {
+            obj.debug('main', "External signing failed for file: " + signingArguments.out);
+            console.error("External signing failed for file: " + signingArguments.out);
+            return;
+        }
     }
 
     // Update the list of available mesh agents
@@ -3998,6 +4053,25 @@ function checkResolveAll(names, func) {
     }
 }
 
+// Resolve a list of domains to IP addresses, return a flat array of IPs.
+async function resolveDomainsToIps(originalArray) {
+    if (!Array.isArray(originalArray)) { return undefined; }
+    const flatResult = [];
+    for (const item of originalArray) {
+        if (new require('ipcheck')(item).valid) {
+            flatResult.push(item);
+            continue;
+        }
+        try {
+            const results = await require('dns').promises.lookup(item, { all: true });
+            flatResult.push(...results.map(r => r.address));
+        } catch (err) {
+            console.log(`Could not resolve ${item}`);
+        }
+    }
+    return flatResult;
+}
+
 // Return the server configuration
 function getConfig(createSampleConfig) {
     // Figure out the datapath location
@@ -4074,6 +4148,8 @@ function InstallModules(modules, args, func) {
                     // If the module is not installed, but we get the ERR_PACKAGE_PATH_NOT_EXPORTED error, try a second way.
                     if ((versionMatch == false) && (modulePath != null)) {
                         if (JSON.parse(require('fs').readFileSync(modulePath, 'utf8')).version != moduleVersion) { throw new Error(); }
+                    } else if (versionMatch == false) { 
+                        throw new Error();
                     }
                 } else {
                     // For all other modules, do the check here.
@@ -4256,30 +4332,29 @@ function mainStart() {
 
         // Build the list of required modules
         // NOTE: ALL MODULES MUST HAVE A VERSION NUMBER AND THE VERSION MUST MATCH THAT USED IN Dockerfile
-        var modules = ['archiver@7.0.1', 'body-parser@1.20.3', 'cbor@5.2.0', 'compression@1.7.5', 'cookie-session@2.1.0', 'express@4.21.2', 'express-handlebars@7.1.3', 'express-ws@5.0.2', 'ipcheck@0.1.0', 'minimist@1.2.8', 'multiparty@4.2.3', '@seald-io/nedb', 'node-forge@1.3.1', 'ua-parser-js@1.0.39', 'ws@8.18.0', 'yauzl@2.10.0'];
+        var modules = ['archiver@7.0.1', 'body-parser@1.20.3', 'cbor@5.2.0', 'compression@1.8.1', 'cookie-session@2.1.1', 'express@4.21.2', 'express-handlebars@7.1.3', 'express-ws@5.0.2', 'ipcheck@0.1.0', 'minimist@1.2.8', 'multiparty@4.2.3', '@seald-io/nedb', 'node-forge@1.3.1', 'ua-parser-js@1.0.40', 'ua-client-hints-js@0.1.2', 'ws@8.18.0', 'yauzl@2.10.0'];
         if (require('os').platform() == 'win32') { modules.push('node-windows@0.1.14'); modules.push('loadavg-windows@1.1.1'); if (sspi == true) { modules.push('node-sspi@0.2.10'); } } // Add Windows modules
         if (ldap == true) { modules.push('ldapauth-fork@5.0.5'); }
         if (ssh == true) { modules.push('ssh2@1.16.0'); }
         if (passport != null) { modules.push(...passport); }
         if (captcha == true) { modules.push('svg-captcha@1.4.0'); }
 
-        if (sessionRecording == true) { modules.push('image-size@1.1.1'); } // Need to get the remote desktop JPEG sizes to index the recodring file.
+        if (sessionRecording == true) { modules.push('image-size@2.0.2'); } // Need to get the remote desktop JPEG sizes to index the recording file.
         if (config.letsencrypt != null) { modules.push('acme-client@4.2.5'); } // Add acme-client module. We need to force v4.2.4 or higher since olver versions using SHA-1 which is no longer supported by Let's Encrypt.
         if (config.settings.mqtt != null) { modules.push('aedes@0.39.0'); } // Add MQTT Modules
         if (config.settings.mysql != null) { modules.push('mysql2@3.11.4'); } // Add MySQL.
         //if (config.settings.mysql != null) { modules.push('@mysql/xdevapi@8.0.33'); } // Add MySQL, official driver (https://dev.mysql.com/doc/dev/connector-nodejs/8.0/)
-        if (config.settings.mongodb != null) { modules.push('mongodb@4.13.0'); modules.push('saslprep@1.0.3'); } // Add MongoDB, official driver.
-        if (config.settings.postgres != null) { modules.push('pg@8.13.1') } // Add Postgres, official driver.
+        if (config.settings.mongodb != null) { modules.push('mongodb@4.17.2'); } // Add MongoDB, official driver. 4.17.0 and above now includes saslprep by default https://github.com/mongodb/node-mongodb-native/releases/tag/v4.17.0
+        if (config.settings.postgres != null) { modules.push('pg@8.14.1') } // Add Postgres, official driver.
         if (config.settings.mariadb != null) { modules.push('mariadb@3.4.0'); } // Add MariaDB, official driver.
         if (config.settings.acebase != null) { modules.push('acebase@1.29.5'); } // Add AceBase, official driver.
         if (config.settings.sqlite3 != null) { modules.push('sqlite3@5.1.7'); } // Add sqlite3, official driver.
         if (config.settings.vault != null) { modules.push('node-vault@0.10.2'); } // Add official HashiCorp's Vault module.
-        if (config.settings.plugins != null) { modules.push('semver@7.5.4'); } // Required for version compat testing and update checks
         if ((config.settings.plugins != null) && (config.settings.plugins.proxy != null)) { modules.push('https-proxy-agent@7.0.2'); } // Required for HTTP/HTTPS proxy support
         else if (config.settings.xmongodb != null) { modules.push('mongojs@3.1.0'); } // Add MongoJS, old driver.
-        if (nodemailer || ((config.smtp != null) && (config.smtp.name != 'console')) || (config.sendmail != null)) { modules.push('nodemailer@6.9.16'); } // Add SMTP support
+        if (nodemailer || ((config.smtp != null) && (config.smtp.name != 'console')) || (config.sendmail != null)) { modules.push('nodemailer@6.10.1'); } // Add SMTP support
         if (sendgrid || (config.sendgrid != null)) { modules.push('@sendgrid/mail'); } // Add SendGrid support
-        if ((args.translate || args.dev) && (Number(process.version.match(/^v(\d+\.\d+)/)[1]) >= 16)) { modules.push('jsdom@22.1.0'); modules.push('esprima@4.0.1'); modules.push('html-minifier@4.0.0'); } // Translation support
+        if ((args.translate || args.dev) && (Number(process.version.match(/^v(\d+\.\d+)/)[1]) >= 16)) { modules.push('jsdom@22.1.0'); modules.push('esprima@4.0.1'); modules.push('html-minifier-terser@7.2.0'); } // Translation support
         if (typeof config.settings.crowdsec == 'object') { modules.push('@crowdsec/express-bouncer@0.1.0'); } // Add CrowdSec bounser module (https://www.npmjs.com/package/@crowdsec/express-bouncer)
         if (config.settings.prometheus != null) { modules.push('prom-client'); } // Add Prometheus Metrics support
 
@@ -4290,7 +4365,7 @@ function mainStart() {
             if (typeof config.settings.autobackup.googledrive == 'object') { modules.push('googleapis@128.0.0'); }
             // Enable WebDAV Support
             if (typeof config.settings.autobackup.webdav == 'object') {
-                if ((typeof config.settings.autobackup.webdav.url != 'string') || (typeof config.settings.autobackup.webdav.username != 'string') || (typeof config.settings.autobackup.webdav.password != 'string')) { addServerWarning("Missing WebDAV parameters.", 2, null, !args.launch); } else { modules.push('webdav@4.11.4'); }
+                if ((typeof config.settings.autobackup.webdav.url != 'string') || (typeof config.settings.autobackup.webdav.username != 'string') || (typeof config.settings.autobackup.webdav.password != 'string')) { addServerWarning("Missing WebDAV parameters.", 2, null, !args.launch); } else { modules.push('webdav@5.8.0'); }
             }
             // Enable S3 Support
             if (typeof config.settings.autobackup.s3 == 'object') { modules.push('minio@8.0.2'); }
@@ -4303,11 +4378,11 @@ function mainStart() {
         if (config.settings.no2factorauth !== true) {
             // Setup YubiKey OTP if configured
             if (yubikey == true) { modules.push('yubikeyotp@0.2.0'); } // Add YubiKey OTP support
-            if (allsspi == false) { modules.push('otplib@10.2.3'); } // Google Authenticator support (v10 supports older NodeJS versions).
+            if (allsspi == false) { modules.push('otplib@12.0.1'); } // Google Authenticator support (v10 supports older NodeJS versions).
         }
 
         // Desktop multiplexor support
-        if (config.settings.desktopmultiplex === true) { modules.push('image-size@1.1.1'); }
+        if (config.settings.desktopmultiplex === true) { modules.push('image-size@2.0.2'); }
 
         // SMS support
         if (config.sms != null) {

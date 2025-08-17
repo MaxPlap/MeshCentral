@@ -638,7 +638,7 @@ module.exports.CreateAmtManager = function (parent) {
 
                 // Connect now
                 var comm;
-                if ((dev.tlsfail !== true) && (parent.config.domains[dev.domainid].amtmanager.tlsconnections !== false)) {
+                if ((dev.tlsfail !== true) && (parent.config.domains[dev.domainid].amtmanager.tlsconnections !== false) && (dev.intelamt.tls == 1)) {
                     parent.debug('amt', dev.name, (dev.connType == 1) ? 'Relay-Connect' : 'LMS-Connect', "TLS", user);
                     comm = CreateWsmanComm(dev.nodeid, 16993, user, pass, 1, null, ciraconn); // Perform TLS
                     comm.xtlsFingerprint = 0; // Perform no certificate checking
@@ -670,7 +670,7 @@ module.exports.CreateAmtManager = function (parent) {
 
                     // Connect now
                     var comm;
-                    if ((dev.tlsfail !== true) && (parent.config.domains[dev.domainid].amtmanager.tlsconnections !== false)) {
+                    if ((dev.tlsfail !== true) && (parent.config.domains[dev.domainid].amtmanager.tlsconnections !== false) && (dev.intelamt.tls == 1)) {
                         parent.debug('amt', dev.name, 'Direct-Connect', "TLS", dev.host, user);
                         comm = CreateWsmanComm(dev.host, 16993, user, pass, 1); // Always try with TLS first
                         comm.xtlsFingerprint = 0; // Perform no certificate checking
@@ -775,9 +775,12 @@ module.exports.CreateAmtManager = function (parent) {
             });
         } else {
             // We got a bad response
-            if ((dev.conntype != 0) && (dev.tlsfail !== true) && (status == 408)) { // If not using CIRA and we get a 408 error while using TLS, try non-TLS.
+            if ((dev.connType != 0) && (dev.tlsfail !== false) && (status == 408)) { // If not using CIRA and we get a 408 error while using non-TLS, try TLS.
+                // non-TLS error on a local connection, try again with TLS
+                dev.tlsfail = false; dev.intelamt.tls = 1; attemptInitialContact(dev); return;
+            } else if ((dev.connType != 0) && (dev.tlsfail !== true) && (status == 408)) { // If not using CIRA and we get a 408 error while using TLS, try non-TLS.
                 // TLS error on a local connection, try again without TLS
-                dev.tlsfail = true; attemptInitialContact(dev); return;
+                dev.tlsfail = true; dev.intelamt.tls = 0; attemptInitialContact(dev); return;
             } else if (status == 401) {
                 // Authentication error, see if we can use alternative credentials
                 if (dev.acctry != null) {
@@ -2354,7 +2357,8 @@ module.exports.CreateAmtManager = function (parent) {
             const dev = stack.dev;
             if (isAmtDeviceValid(dev) == false) return; // Device no longer exists, ignore this request.
             const domain = parent.config.domains[dev.domainid];
-            if ((responses['AMT_PublicKeyCertificate'].status != 200) || (responses['AMT_PublicKeyCertificate'].status != 200)) { func(dev); return; } // We can't get the certificate list, fail and carry on.
+            if ((responses['AMT_PublicKeyCertificate'].status != 200) || (responses['AMT_PublicPrivateKeyPair'].status != 200)) { func(dev); return; } // We can't get the certificate list, fail and carry on.
+            if ((responses['AMT_PublicKeyCertificate'].responses.length == 0) || (responses['AMT_PublicPrivateKeyPair'].responses.length == 0)) { func(dev); return; } // Empty certificate list, fail and carry on.
 
             // Sort out the certificates
             var xxCertificates = responses['AMT_PublicKeyCertificate'].responses;

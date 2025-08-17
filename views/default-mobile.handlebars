@@ -1304,6 +1304,7 @@
         delete urlargs.viewmode;
         delete urlargs.gotonode;
         delete urlargs.gotodevicename;
+        delete urlargs.gotodevicername;
         delete urlargs.gotodeviceip;
         delete urlargs.gotomesh;
         delete urlargs.panel;
@@ -1345,7 +1346,7 @@
         var webrtcconfiguration = '{{{webrtcconfig}}}';
         if (webrtcconfiguration == '') { webrtcconfiguration = null; } else { try { webrtcconfiguration = JSON.parse(decodeURIComponent(webrtcconfiguration)); } catch (ex) { console.log('Invalid WebRTC config: "' + webrtcconfiguration + '".'); webrtcconfiguration = null; } }
         var StatusStrs = ["Disconnected", "Connecting...", "Setup...", "Connected", "Intel&reg; AMT Connected"];
-        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android ARM", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service"];
+        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service", "ARMVIRT32 (OpenWRT)", "RISC-V x86-64"];
         var files;
         var terminal;
         var passRequirements = '{{{passRequirements}}}';
@@ -1524,8 +1525,22 @@
         function setSessionActivity() { sessionActivity = Date.now(); }
         function checkIdleSessionTimeout() {
             var delta = (Date.now() - sessionActivity);
-            if (delta > serverinfo.timeout && serverinfo.logoutOnIdleSessionTimeout) {
-                window.location.href = 'logout';
+            if (delta > serverinfo.timeout) {
+                if (desktop != null) { // Disconnect remote desktop
+                    desktop.Stop();
+                    desktopNode = desktop = null;
+                }
+                if (terminal != null) { // Disconnect terminal
+                    terminal.Stop();
+                    terminal = null;
+                }
+                if (files != null) { // Disconnect files
+                    files.Stop();
+                    files = null;
+                }
+                if (serverinfo.logoutonidlesessiontimeout) {
+                    window.location.href = 'logout';
+                }
             }
         }
 
@@ -2077,6 +2092,7 @@
                                 node.namel = node.name.toLowerCase();
                                 if (node.rname) { node.rnamel = node.rname.toLowerCase(); } else { node.rnamel = node.namel; }
                                 if (message.event.node.icon) { node.icon = message.event.node.icon; }
+                                if (message.event.node.lastbootuptime != null) { node.lastbootuptime = message.event.node.lastbootuptime; }
 
                                 //onSortSelectChange(true);
                                 //drawNotifications();
@@ -2237,6 +2253,10 @@
                 var foundNode = null;
                 if (nodes != null) { for (var i in nodes) { if (nodes[i].name == args.gotodevicename) { foundNode = nodes[i]._id; } } }
                 if (foundNode) { gotoDevice(foundNode, xviewmode); go(xviewmode); }
+            } else if (args.gotodevicername != null) {
+                var foundNode = null;
+                if (nodes != null) { for (var i in nodes) { if (nodes[i].rname == args.gotodevicername) { foundNode =  nodes[i]._id; } } }
+                if (foundNode) { gotoDevice(foundNode, xviewmode); goBackStack.push(1); } 
             } else if (args.gotodeviceip != null) {
                 var foundNode = null;
                 if (nodes != null) { for (var i in nodes) { if (nodes[i].ip == args.gotodeviceip) { foundNode = nodes[i]._id; } } }
@@ -2286,7 +2306,7 @@
             if (idtype == 'devices') { go(2); }
             if (idtype == 'files') {
                 // Remind the user to add two factor authentication
-                if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access this feature until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }  
+                if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || (userinfo.otpduo > 0) || (userinfo.otpdev > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access this feature until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }  
                 go(5);
             }
         }
@@ -2569,7 +2589,7 @@
             if ((userinfo.emailVerified !== true) && (serverinfo.emailcheck == true) && (userinfo.siteadmin != 0xFFFFFFFF)) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until a email address is verified. This is required for password recovery. Go to the \"My Account\" to change and verify an email address."); return; }
 
             // Remind the user to add two factor authentication
-            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }
+            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || (userinfo.otpduo > 0) || (userinfo.otpdev > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }
 
             // We are allowed, let's prompt to information
             var x = addHtmlValue("Name", '<input id=dp3meshname style=width:170px maxlength=64 onchange=account_validateMeshCreate() onkeyup=account_validateMeshCreate() />');
@@ -2663,7 +2683,7 @@
 
         function gotoMesh(meshid) {
             // Remind the user to add two factor authentication
-            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access this feature until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }  
+            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || (userinfo.otpduo > 0) || (userinfo.otpdev > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access this feature until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }  
             currentMesh = meshes[meshid];
             if (currentMesh == null) { goBack(); }
             p20updateMesh();
@@ -3667,7 +3687,7 @@
             if ((userinfo.emailVerified !== true) && (serverinfo.emailcheck == true) && (userinfo.siteadmin != 0xFFFFFFFF)) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until a email address is verified. This is required for password recovery. Go to the \"My Account\" to change and verify an email address."); return; }
 
             // Remind the user to add two factor authentication
-            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }
+            if ((features & 0x00040000) && !((userinfo.otpsecret == 1) || (userinfo.otphkeys > 0) || (userinfo.otpkeys > 0) || (userinfo.otpduo > 0) || (userinfo.otpdev > 0) || ((features & 0x00800000) && (userinfo.otpekey == 1)))) { setDialogMode(2, "Account Security", 1, null, "Unable to access a device until two-factor authentication is enabled. This is required for extra security. Go to the \"My Account\" and look at the \"Account Security\" section."); return; }
 
             var node = getNodeFromId(nodeid);
             if (node == null) { goBack(); return; }
@@ -6805,7 +6825,19 @@
             if (e.shiftKey == true) { meshserver.send({ action: 'uploadagentcore', nodeid: consoleNode._id, type: 'default' }); } // Upload default core
             else if (e.altKey == true) { meshserver.send({ action: 'uploadagentcore', nodeid: consoleNode._id, type: 'clear' }); } // Clear the core
             else if (e.ctrlKey == true) { p15uploadCore2(); } // Upload the core from a file
-            else { setDialogMode(2, "Perform Agent Action", 3, p15uploadCoreEx, addHtmlValue("Action", '<select id=d3coreMode style=width:230px><option value=1>' + "Upload default server core" + '</option><option value=2>' + "Clear the core" + '</option><option value=6>' + "Upload recovery core" + '</option><option value=7>' + "Upload tiny core" + '</option><option value=3>' + "Upload a core file" + '</option><option value=4>' + "Soft disconnect agent" + '</option><option value=5>' + "Hard disconnect agent" + '</option><option value=8>' + "Restart agent service" + '</select>')); }
+            else { 
+                var htmlValue = '<select id=d3coreMode style=width:230px>' +
+                    '<option value=1>' + "Upload default server core" + '</option>' +
+                    '<option value=2>' + "Clear the core" + '</option>' +
+                    '<option value=3>' + "Upload a core file" + '</option>' +
+                    '<option value=4>' + "Soft disconnect agent" + '</option>' +
+                    '<option value=5>' + "Hard disconnect agent" + '</option>' +
+                    '<option value=6>' + "Upload recovery core" + '</option>' +
+                    '<option value=7>' + "Upload tiny core" + '</option>' +
+                    '<option value=8>' + "Restart agent service" + '</option>' +
+                    '<option value=9>' + "Force agent update" + '</option></select>';
+                setDialogMode(2, "Perform Agent Action", 3, p15uploadCoreEx, addHtmlValue("Action", htmlValue));
+            }
         }
 
         function p15uploadCoreEx() {
@@ -6833,6 +6865,9 @@
             } else if (Q('d3coreMode').value == 8) {
                 // Restart MeshAgent service
                 meshserver.send({ action: 'msg', type: 'console', nodeid: consoleNode._id, value:'service restart' });
+            } else if (Q('d3coreMode').value == 9) {
+                // Update mesh agent
+                meshserver.send({ action: 'updateAgents', nodeids: [consoleNode._id] });
             }
         }
 
@@ -7602,7 +7637,16 @@
         function printDateTime(d) { return d.toLocaleString(args.locale); }
         function format(format) { var args = Array.prototype.slice.call(arguments, 1); return format.replace(/{(\d+)}/g, function (match, number) { return typeof args[number] != 'undefined' ? args[number] : match; }); };
         function nobreak(x) { return x.split(' ').join('&nbsp;'); }
-        function getUserName(userid) { if (users && users[userid] != null) return users[userid].name; return userid.split('/')[2]; }
+        function getUserName(userid) { 
+            var useridsplit = userid.split('/'), userid2 = useridsplit[0] + '/' + useridsplit[1] + '/' + useridsplit[2], guestname = '';
+            if ((useridsplit.length == 4) && (useridsplit[3].startsWith('guest:'))) { guestname = ' - ' + decode_utf8(atob(useridsplit[3].substring(6))); }
+            if (users && users[userid2] != null) { if (users[userid2].realname != null) return (users[userid2].realname + guestname); else return (users[userid2].name + guestname); }
+            if (currentNode && currentNode.links && currentNode.links[userid] && currentNode.links[userid].name != null) { return (currentNode.links[userid].name + guestname); }
+            if (userid == userinfo._id) { return (userinfo.name + guestname); }
+            if (nodes) { for (var a in nodes) { if (nodes[a].links) { for (var b in nodes[a].links) { if (nodes[a].links[b].name && b == userid) return (nodes[a].links[b].name + guestname); } } } }
+            if (meshes) { for (var a in meshes) { if (meshes[a].links) { for (var b in meshes[a].links) { if (meshes[a].links[b].name && b == userid) return (meshes[a].links[b].name + guestname); } } } }
+            return (useridsplit[2] + guestname);
+        }
         function addDetailItem(title, value, state) { return '<table style=width:100%><td>' + nobreak(title) + '<td style=text-align:right>' + value + '</table>'; }
         function isPrivateIP(a) { return (a.startsWith('10.') || a.startsWith('172.16.') || a.startsWith('192.168.')); }
         function encodeURIComponentEx(txt) { return encodeURIComponent(txt).replace(/'/g, '%27'); };

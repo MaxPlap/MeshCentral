@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" dir="ltr" xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
@@ -16,9 +16,9 @@
     <link type="text/css" href="styles/xterm.css" media="screen" rel="stylesheet" title="CSS" />
     <link type="text/css" href="styles/flatpickr.min.css" media="screen" rel="stylesheet" title="CSS">
     <link id="theme-stylesheet" href="styles/bootstrap{{{min}}}.css" rel="stylesheet" title="CSS">
-    <link href="styles/sweetalert2.min.css" rel="stylesheet" title="CSS">
     <link href="styles/select2.min.css" rel="stylesheet" title="CSS">
     <link href="styles/select2-bootstrap-5-theme.min.css" rel="stylesheet" title="CSS">
+    <link type="text/css" href="styles/custom.css" media="screen" rel="stylesheet" title="CSS" />
     <link rel="apple-touch-icon" href="/favicon-303x303.png" />
     <script type="text/javascript" src="scripts/common-0.0.1{{{min}}}.js"></script>
     <script type="text/javascript" src="scripts/meshcentral{{{min}}}.js"></script>
@@ -48,7 +48,6 @@
     <script type="text/javascript" src="scripts/jquery{{{min}}}.js"></script>
     <script type="text/javascript" src="scripts/bootstrap{{{min}}}.js"></script>
     <script type="text/javascript" src="scripts/fontawesome/all.min.js"></script>
-    <script type="text/javascript" src="scripts/sweetalert2.all.min.js"></script>
     <script type="text/javascript" src="scripts/select2.full.min.js"></script>
     <script type="text/javascript" src="scripts/themes/theme-switcher.js"></script>
     <script keeplink=1 type="text/javascript" src="scripts/u2f-api{{{min}}}.js"></script>
@@ -415,7 +414,7 @@
                         <input type=button class="btn btn-primary me-1 btn-sm" id=SelectAllButton onclick="selectallButtonFunction();" value="Select All" />
                         <input type=button class="btn btn-primary me-1 btn-sm" id=GroupActionButton disabled="disabled" value="Group Action" onclick=groupActionFunction() />
                         <input type=button class="btn btn-primary me-1 btn-sm" id=ScrollToTopButton onclick="onDevicesScroll(true);" value="Scroll To Top" />
-                        <input type="text" id=SearchInput class="form-control-sm me-1 btn-sm" placeholder="Filter" onchange=onDeviceSearchChanged(event) onclick=onDeviceSearchChanged(event) onkeyup=onDeviceSearchChanged(event) onfocus=onSearchFocus(1) onblur=onSearchFocus(0) title="Filter: user:xxx or u:xxx ip:xxx group:xxx or g:xxx tag:xxx or t: xxx atag:xxx or a:xxx os:xxx amt:xxx desc:xxx wsc:ok wsc:noav wsc:noupdate wsc:nofirewall wsc:any">
+                        <input type="text" id=SearchInput class="form-control-sm me-1 btn-sm" placeholder="Filter" onchange=onDeviceSearchChanged(event) onclick=onDeviceSearchChanged(event) onkeyup=onDeviceSearchChanged(event) onfocus=onSearchFocus(1) onblur=onSearchFocus(0) title="Filter: user:xxx or u:xxx ip:xxx group:xxx or g:xxx tag:xxx or t: xxx atag:xxx or a:xxx os:xxx amt:xxx desc:xxx wsc:ok wsc:noav wsc:noupdate wsc:nofirewall wsc:any connectivity:xxx c:xxx">
                         <span id=SearchInputClearButton style="display:none;position:relative">
                             <span class="fa-layers fa-fw" role="button" onclick="clearDeviceSearch()" style="position:absolute;left:-25px;top:-15px">
                                 <i class="fa-solid fa-circle" style="color:var(--bs-secondary-bg)"></i>
@@ -451,7 +450,7 @@
                         <input type="button" class="btn btn-primary me-1 btn-sm" onclick="onDevicesScroll(true);" value="Scroll To Top" />
                         <div class="form-check me-1" title="Automatic connect"><input class="form-check-input me-1" type=checkbox id="autoConnectDesktopCheckbox" onclick="autoConnectDesktops(event)" /><label class="form-check-label" for="autoConnectDesktopCheckbox">Auto</label></div>
                         <input type="button" class="btn btn-primary me-1 btn-sm" onclick="showMultiDesktopSettings()" value="Settings" />
-                        <input type="text" id=KvmSearchInput class="form-control-sm me-1" placeholder="Filter" onchange=onDeviceSearchChanged(event) onclick=onDeviceSearchChanged(event) onkeyup=onDeviceSearchChanged(event) onfocus=onSearchFocus(1) onblur=onSearchFocus(0) title="Filter: user:xxx or u:xxx ip:xxx group:xxx or g:xxx tag:xxx or t: xxx atag:xxx or a:xxx os:xxx amt:xxx desc:xxx wsc:ok wsc:noav wsc:noupdate wsc:nofirewall wsc:any">
+                        <input type="text" id=KvmSearchInput class="form-control-sm me-1" placeholder="Filter" onchange=onDeviceSearchChanged(event) onclick=onDeviceSearchChanged(event) onkeyup=onDeviceSearchChanged(event) onfocus=onSearchFocus(1) onblur=onSearchFocus(0) title="Filter: user:xxx or u:xxx ip:xxx group:xxx or g:xxx tag:xxx or t: xxx atag:xxx or a:xxx os:xxx amt:xxx desc:xxx wsc:ok wsc:noav wsc:noupdate wsc:nofirewall wsc:any connectivity:xxx c:xxx">
                         <span id=KvmSearchInputClearButton style="display:none;position:relative">
                             <span class="fa-layers fa-fw" role="button" onclick="clearDeviceSearch()" style="position:absolute;left:-25px;top:-15px">
                                 <i class="fa-solid fa-circle" style="color:var(--bs-secondary-bg)"></i>
@@ -1878,7 +1877,7 @@
                                         <label style="display:block"><input type="checkbox" id="d7rdp4" />Disable Theming</label>
                                         <label style="display:block"><input type="checkbox" id="d7rdp6" />Disable Cursor Shadow</label>
                                         <label style="display:block"><input type="checkbox" id="d7rdp7" />Disable Cursor Settings</label>
-                                        <label style="display:block"><input type="checkbox" id="d7rdp8" />Enable Font Smooting</label>
+                                        <label style="display:block"><input type="checkbox" id="d7rdp8" />Enable Font Smoothing</label>
                                         <label style="display:block"><input type="checkbox" id="d7rdp9" />Enable Desktop Composision</label>
                                         <label style="display:block"><input type="checkbox" id="d7rdpclip" />Automatic Clipboard</label>
                                         <label style="display:block"><input type="checkbox" id="d7rdpsmb" />Swap Mouse Buttons</label>
@@ -1947,7 +1946,7 @@
         var autoReconnect = true;
         var powerStatetable = ['', "Powered", "Sleep", "Sleep", "Sleep", "Hibernating", "Power off", "Present"];
         var StatusStrs = ["Disconnected", "Connecting...", "Setup...", "Connected", "Intel&reg; AMT Connected"];
-        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service"];
+        var agentsStr = ["Unknown", "Windows 32bit console", "Windows 64bit console", "Windows 32bit service", "Windows 64bit service", "Linux 32bit", "Linux 64bit", "MIPS", "XENx86", "Android", "Linux ARM", "macOS x86-32bit", "Android x86", "PogoPlug ARM", "Android", "Linux Poky x86-32bit", "macOS x86-64bit", "ChromeOS", "Linux Poky x86-64bit", "Linux NoKVM x86-32bit", "Linux NoKVM x86-64bit", "Windows MinCore console", "Windows MinCore service", "NodeJS", "ARM-Linaro", "ARMv6l / ARMv7l", "ARMv8 64bit", "ARMv6l / ARMv7l / NoKVM", "MIPS24KC (OpenWRT)", "Apple Silicon", "FreeBSD x86-64", "Unknown", "Linux ARM 64 bit (glibc/2.24 NOKVM)", "Alpine Linux x86 64 Bit (MUSL)", "Assistant (Windows)", "Armada370 - ARM32/HF (libc/2.26)", "OpenWRT x86-64", "OpenBSD x86-64", "Unknown", "Unknown", "MIPSEL24KC (OpenWRT)", "ARMADA/CORTEX-A53/MUSL (OpenWRT)", "Windows ARM 64bit console", "Windows ARM 64bit service", "ARMVIRT32 (OpenWRT)", "RISC-V 64bit"];
         var agentsStrNoAgent = ['', '', '', '', "Windows", '', "Linux", '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', "Apple"];
         var sort = 0;
         var searchFocus = 0;
@@ -2074,6 +2073,7 @@
             delete urlargs.viewmode;
             delete urlargs.gotonode;
             delete urlargs.gotodevicename;
+            delete urlargs.gotodevicername;
             delete urlargs.gotodeviceip;
             delete urlargs.gotomesh;
             delete urlargs.gotouser;
@@ -2393,28 +2393,31 @@
             QV('masthead', !(hide & 1));
             QV('topbar', !(hide & 2));
             QV('footer', !(hide & 4));
-            QV('p1title', !(hide & 8));
-            QV('p2title', !(hide & 8));
-            QV('p3title', !(hide & 8));
-            QV('p4title', !(hide & 8));
-            QV('p5title', !(hide & 8));
-            QV('p6title', !(hide & 8));
-            QV('p10title', !(hide & 8));
-            QV('p11title', !(hide & 8));
-            QV('p12title', !(hide & 8));
-            QV('p13title', !(hide & 8));
-            QV('p14title', !(hide & 8));
-            QV('p15title', !(hide & 8));
-            QV('p16title', !(hide & 8));
-            QV('p17title', !(hide & 8));
-            QV('p20title', !(hide & 8));
-            QV('p21title', !(hide & 8));
-            QV('p30title', !(hide & 8));
-            QV('p31title', !(hide & 8));
-            QV('p40title', !(hide & 8));
-            QV('p41title', !(hide & 8));
-            QV('p50title', !(hide & 8));
-            QV('p51title', !(hide & 8));
+            if ((hide & 8)) {
+                QC('p1title').add('d-none');
+                QC('p2title').add('d-none');
+                QC('p3title').add('d-none');
+                QC('p4title').add('d-none');
+                QC('p5title').add('d-none');
+                QC('p6title').add('d-none');
+                QC('p10title').add('d-none');
+                QC('p11title').add('d-none');
+                QC('p12title').add('d-none');
+                QC('p13title').add('d-none');
+                QC('p14title').add('d-none');
+                QC('p15title').add('d-none');
+                QC('p16title').add('d-none');
+                QC('p17title').add('d-none');
+                QC('p20title').add('d-none');
+                QC('p21title').add('d-none');
+                QC('p30title').add('d-none');
+                QC('p31title').add('d-none');
+                QC('p40title').add('d-none');
+                QC('p41title').add('d-none');
+                QC('p50title').add('d-none');
+                QC('p51title').add('d-none');
+                QC('column_l').remove('pt-3');
+            }
             //if (hide & 16) { QV('page_leftbar', false); QS('page_content').left = '0px'; }
             if (!footerBar) { QC('body').add('nofooter'); } else { QC('body').remove('nofooter'); }
 
@@ -2818,6 +2821,8 @@
             if (userinfo == null) return -1;
             var authFactorCount = 0;
             if (userinfo.otpsecret == 1) { authFactorCount++; } // Authenticator time factor
+            if (userinfo.otpduo == 1) { authFactorCount++; } // Duo factor
+            if (userinfo.otpdev == 1) { authFactorCount++; } // Push authentication factor
             if (userinfo.otphkeys > 0) { authFactorCount += userinfo.otphkeys; } // FIDO hardware factor
             if ((features & 0x00800000) && (userinfo.otpekey == 1)) { authFactorCount++; } // EMail factor
             if ((features & 0x02000000) && (features & 0x04000000) && (userinfo.phone != null)) { authFactorCount++; } // SMS factor
@@ -2897,17 +2902,28 @@
                     files.Stop();
                     files = null;
                 }
-                if (serverinfo.logoutOnIdleSessionTimeout) {
+                if (serverinfo.logoutonidlesessiontimeout) {
                     window.location.href = 'logout';
                 }
             } else {
                 var ds = Math.round((serverinfo.timeout - delta) / 1000);
+                var sessionInProgress = (desktop != null || terminal != null || files != null);
+                var show = serverinfo.logoutonidlesessiontimeout || sessionInProgress;
+                var isLogout = serverinfo.logoutonidlesessiontimeout;
+                var theText = '';
                 if (ds <= 60) {
-                    QH('idleTimeoutNotify', '<br />' + format((ds == 1) ? "1 second until disconnect" : "{0} seconds until disconnect", ds));
+                    theText = isLogout
+                        ? (ds == 1 ? "1 second until logout" : "{0} seconds until logout")
+                        : (ds == 1 ? "1 second until disconnect" : "{0} seconds until disconnect");
                 } else {
                     ds = Math.round(ds / 60);
-                    if (ds <= 5) { QH('idleTimeoutNotify', '<br />' + format((ds == 1) ? "1 minute until disconnect" : "{0} minutes until disconnect", ds)); }
+                    if (ds <= 5) {
+                        theText = isLogout
+                            ? (ds == 1 ? "1 minute until logout" : "{0} minutes until logout")
+                            : (ds == 1 ? "1 minute until disconnect" : "{0} minutes until disconnect");
+                    }
                 }
+                QH('idleTimeoutNotify', show && theText ? '<br />' + format(theText, ds) : '');
             }
         }
 
@@ -3495,7 +3511,7 @@
                             var secret = message.secret;
                             if (secret.length == 52) { secret = secret.split(/(.............)/).filter(Boolean).join(' '); }
                             else if (secret.length == 32) { secret = secret.split(/(....)/).filter(Boolean).join(' '); secret = secret.substring(0, 20) + '<br/>' + secret.substring(20) }
-                            QH('d2optinfo', '<table style=width:380px><tr><td style=vertical-align:top>' + format("Install" + ' <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" rel="noreferrer noopener" target=_blank>' + "Google Authenticator" + '</a> ' + "or a compatible application and scan the barcode, use <a href=\"{0}\" rel=\"noreferrer noopener\" target=_blank>this link</a> or enter the secret. Then, enter the current 6 digit token below to activate 2-Step login.", message.url) + '<br /><br />' + 'Secret <img src=images/link4.png height=10 width=10 title="' + "Copy Secret to clipboard" + '" style=cursor:pointer onclick=d2CopySecretToClip()>' + '<br /><tt id=d2optsecret secret="' + message.secret + '" style=font-size:12px>' + secret + '</tt><br /><br /></td><td style=width:1px;vertical-align:top><a href="' + message.url + '" rel="noreferrer noopener" target=_blank><div id="qrcode"></div></a></td><tr><td colspan=2 style="text-align:center;border-top:1px solid black"><br />' + "Enter the token here for 2-step login:" + ' <input type=text autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]*" onkeypress="return (event.keyCode == 8) || (event.charCode >= 48 && event.charCode <= 57)" onkeyup=account_addOtpCheck(event) onkeydown=account_addOtpCheck() maxlength=6 id=d2otpauthinput type=text></td></table>');
+                            QH('d2optinfo', '<table><tr><td style=vertical-align:top>' + format("Install" + ' <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2" rel="noreferrer noopener" target=_blank>' + "Google Authenticator" + '</a> ' + "or a compatible application and scan the barcode, use <a href=\"{0}\" rel=\"noreferrer noopener\" target=_blank>this link</a> or enter the secret. Then, enter the current 6 digit token below to activate 2-Step login.", message.url) + '<br /><br />' + 'Secret <img src=images/link4.png height=10 width=10 title="' + "Copy Secret to clipboard" + '" style=cursor:pointer onclick=d2CopySecretToClip()>' + '<br /><tt id=d2optsecret secret="' + message.secret + '" style=font-size:12px>' + secret + '</tt><br /><br /></td><td style=width:1px;vertical-align:top><a href="' + message.url + '" rel="noreferrer noopener" target=_blank><div id="qrcode"></div></a></td><tr><td colspan=2 style="text-align:center;border-top:1px solid black"><br />' + "Enter the token here for 2-step login:" + ' <input type=text autocomplete="one-time-code" inputmode="numeric" pattern="[0-9]*" onkeypress="return (event.keyCode == 8) || (event.charCode >= 48 && event.charCode <= 57)" onkeyup=account_addOtpCheck(event) onkeydown=account_addOtpCheck() maxlength=6 id=d2otpauthinput type=text></td></table>');
                             new QRCode(Q('qrcode'), { text: message.url, width: 128, height: 128, colorDark: '#000000', colorLight: '#EEE', correctLevel: QRCode.CorrectLevel.H });
                             QV('idx_dlgOkButton', true);
                             QE('idx_dlgOkButton', false);
@@ -3517,7 +3533,7 @@
                     break;
                 }
                 case 'otpauth-getpasswords': {
-                    if (xxdialogMode) return;
+                    if (xxdialogMode == 2 && (xxdialogTag != 'otpauth-manage')) return;
                     var x = "One time tokens can be used as secondary authentication. Generate a set, print them and keep them in a safe place.";
                     x += '<div style="border-radius:6px;border: 2px dashed #888;width:100%;margin-top:8px"><div style="padding:8px;font-family:Arial, Helvetica, sans-serif;font-size:20px;font-weight:bold"><table class=selecttext style=width:100%;text-align:center>';
                     if (message.passwords) {
@@ -3538,13 +3554,15 @@
                         x += '<tr><td>' + "No Active Tokens";
                     }
                     x += '</table></div></div><br />';
-                    x += '<div>';
-                    x += '<input type=button value="' + "Generate New Tokens" + '" onclick="account_manageOtp(1);"></input>';
+                    x += '<div class="btn-group">';
+                    x += '<button type=button class="btn btn-warning" onclick="account_manageOtp(1);">' + "Generate New Tokens" + '</input>';
                     if (message.passwords != null) {
-                        x += '<input type=button value="' + "Clear Tokens" + '" onclick="account_manageOtp(2);"></input>';
-                        x += '&nbsp;<img src=images/link4.png height=10 width=10 title="' + "Copy valid codes to clipboard" + '" style=cursor:pointer onclick=copyTextToClip2("' + encodeURIComponentEx(clipb) + '")>';
+                        x += '<button type=button class="btn btn-danger" onclick="account_manageOtp(2);">' + "Clear Tokens" + '</button></div>';
+                        x += '&nbsp;<i class="fa-regular fa-clipboard" title="' +  "Copy valid codes to clipboard" + '" style="cursor:pointer" onclick=copyTextToClip2("' + encodeURIComponentEx(clipb) + '")></i>';
+                    } else {
+                        x += '</div>'
                     }
-                    x += '</div><br />';
+                    xxdialogTag = 'otpauth-manage';
                     setModalContent('xxAddAgent', "Manage Backup Codes", x);
                     showModal('xxAddAgentModal', 'idx_dlgOkButton');
                     break;
@@ -3554,11 +3572,11 @@
                     var start = '<div style="border-radius:6px;border:2px solid #CCC;background-color:#BBB;width:100%;box-sizing:border-box;margin-bottom:6px"><div style="margin:3px;font-family:Arial, Helvetica, sans-serif;font-size:16px;font-weight:bold"><table style=width:100%;text-align:left>';
                     var end = '</table></div></div>';
                     var x = '<a href="https://www.yubico.com/" rel="noreferrer noopener" target="_blank">' + "Hardware keys" + '</a> ' + "are used as secondary login authentication.";
-                    x += '<div style="max-height:150px;overflow-y:auto;overflow-x:hidden;margin-top:6px;margin-bottom:6px">';
+                    x += '<div class="backgroundContainer" style="max-height:150px;overflow-y:auto;overflow-x:hidden;margin-top:6px;margin-bottom:6px">';
                     if (message.keys && message.keys.length > 0) {
                         for (var i in message.keys) {
                             var key = message.keys[i], type = (key.type == 2) ? 'OTP' : 'WebAuthn';
-                            x += start + '<tr style=margin:5px><td style=width:30px><img width=24 height=18 src="images/hardware-key-' + type + '-24.png" style=margin-top:4px><td style=width:250px>' + key.name + '<td><input type=button value="' + "Remove" + '" onclick=account_removehkey(' + key.i + ')></input>' + end;
+                            x += start + '<tr style=margin:5px><td style=width:30px><img width=24 height=18 src="images/hardware-key-' + type + '-24.png" style=margin-top:4px><td style=width:250px>' + key.name + '<td style=text-align:right><button type=button class="btn btn-danger" onclick=account_removehkey(' + key.i + ')>' + "Remove" + '</button>' + end;
                         }
                     } else {
                         x += start + '<tr style=text-align:center><td>' + "No Keys Configured" + end;
@@ -3567,12 +3585,13 @@
                     x += '<div>';
                     var hkeycount = (typeof userinfo.otphkeys == 'number') ? userinfo.otphkeys : 0;
                     if ((typeof serverinfo.maxfidokeys != 'number') || (serverinfo.maxfidokeys > hkeycount)) { // Check if we we reached maximum hardware keys
-                        if ((features & 0x00020000) != 0) { x += '<input id=d2addkey3 type=button value="' + "Add Key" + '" onclick="account_addhkey(3);"></input>'; }
-                        if ((features & 0x00004000) != 0) { x += '<input id=d2addkey2 type=button value="' + "Add YubiKey&reg; OTP" + '" onclick="account_addhkey(2);"></input>'; }
+                        if ((features & 0x00020000) != 0) { x += '<button class="btn btn-primary" id=d2addkey3 type=button onclick="account_addhkey(3);">' + "Add Key" + '</input>'; }
+                        if ((features & 0x00004000) != 0) { x += '<button class="btn btn-primary" id=d2addkey2 type=button onclick="account_addhkey(2);">' + "Add YubiKey&reg; OTP" +'</input>'; }
                     } else {
                         x += "Maximum keys reached.";
                     }
                     x += '</div><br />';
+                    xxdialogTag = 'otpauth-hardware-manage';
                     setModalContent('xxAddAgent', "Manage Security Keys", x);
                     showModal('xxAddAgentModal', 'idx_dlgOkButton');
                     if (u2fSupported() == false) { QE('d2addkey1', false); }
@@ -3608,7 +3627,6 @@
                     navigator.credentials.create({ publicKey: publicKey }).then(function (newCredentialInfo) {
                         // Public key credential
                         meshserver.send({ action: 'webauthn-endregister', response: { rawId: btoa(String.fromCharCode.apply(null, new Uint8Array(newCredentialInfo.rawId))), response: { attestationObject: btoa(String.fromCharCode.apply(null, new Uint8Array(newCredentialInfo.response.attestationObject))), clientDataJSON: btoa(String.fromCharCode.apply(null, new Uint8Array(newCredentialInfo.response.clientDataJSON))) }, type: newCredentialInfo.type } });
-                        setDialogMode(0);
                     }, function (error) {
                         // Error
                         console.log("ERROR: " + error);
@@ -4043,6 +4061,7 @@
                                 node.namel = node.name.toLowerCase();
                                 if (node.rname) { node.rnamel = node.rname.toLowerCase(); } else { node.rnamel = node.namel; }
                                 if (message.event.node.icon) { node.icon = message.event.node.icon; }
+                                if (message.event.node.lastbootuptime != null) { node.lastbootuptime = message.event.node.lastbootuptime; }
 
                                 // Check if this device has changed device group
                                 if (message.event.node.meshid != node.meshid) {
@@ -4143,15 +4162,15 @@
                                     if ((node.agent != null) && (node.agent.root === false)) { agentPrivilages = "Agent connected with limited privilages"; }
                                     var abc = { title: node.name, icon: node.icon, nodeid: node._id, id: message.event.id };
                                     if (((node.conn & 1) == 0) && ((message.event.conn & 1) != 0)) { abc.text = agentPrivilages; addNotification(abc); }
-                                    if (((node.conn & 2) == 0) && ((message.event.conn & 2) != 0)) { abc.text = "Intel AMT detected"; addNotification(abc); }
-                                    if (((node.conn & 4) == 0) && ((message.event.conn & 4) != 0)) { abc.text = "Intel AMT CIRA connected"; addNotification(abc); }
+                                    if (((node.conn & 2) == 0) && ((message.event.conn & 2) != 0)) { abc.text = "Intel AMT CIRA connected"; addNotification(abc); }
+                                    if (((node.conn & 4) == 0) && ((message.event.conn & 4) != 0)) { abc.text = "Intel AMT connected"; addNotification(abc); }
                                     if (((node.conn & 16) == 0) && ((message.event.conn & 16) != 0)) { abc.text = "MQTT connected"; addNotification(abc); }
                                 }
                                 if (n & 4) {
                                     var abc = { title: node.name, icon: node.icon, nodeid: node._id, id: message.event.id };
                                     if (((node.conn & 1) != 0) && ((message.event.conn & 1) == 0)) { abc.text = "Agent disconnected"; addNotification(abc); }
-                                    if (((node.conn & 2) != 0) && ((message.event.conn & 2) == 0)) { abc.text = "Intel AMT not detected"; addNotification(abc); }
-                                    if (((node.conn & 4) != 0) && ((message.event.conn & 4) == 0)) { abc.text = "Intel AMT CIRA disconnected"; addNotification(abc); }
+                                    if (((node.conn & 2) != 0) && ((message.event.conn & 2) == 0)) { abc.text = "Intel AMT CIRA disconnected"; addNotification(abc); }
+                                    if (((node.conn & 4) != 0) && ((message.event.conn & 4) == 0)) { abc.text = "Intel AMT disconnected"; addNotification(abc); }
                                     if (((node.conn & 16) != 0) && ((message.event.conn & 16) == 0)) { abc.text = "MQTT disconnected"; addNotification(abc); }
                                 }
 
@@ -4454,14 +4473,14 @@
                     if (message.events.length == 0) {
                         x += 'No previous login.';
                     } else {
-                        x += '<div style=max-height:260px;overflow-y:scroll;overflow-x:hidden><table>';
+                        x += '<div class="backgroundContainer" style=max-height:260px;overflow-y:scroll;overflow-x:hidden><table>';
                         for (var i in message.events) {
                             var m = message.events[i].m;
                             if (m == 107) { m = "Valid login"; c = 'BBD1BB'; xx = ''; if (message.events[i].tn != null) { m = format("Token: {0}", message.events[i].tn); c = '88D188' } }
                             else if (m == 108) { m = "Invalid 2FA"; c = 'DD9DC3'; xx = 'x'; }
                             else if (m == 109) { m = "Locked account"; c = 'E1BBBB'; xx = 'x'; }
                             else if (m == 110) { m = "Invalid password"; c = 'E1BBBB'; xx = 'x'; }
-                            x += '<tr><td><img src=images/user-32' + xx + '.png height=32 width=32 style=float:left srcset="images/user-64' + xx + '.png 2x"><td><div style=width:300px;background-color:#' + c + ';border-radius:6px;margin-bottom:4px;padding:4px><div>' + printDateTime(new Date(message.events[i].t)) + ', <b>' + EscapeHtml(m) + '</b></div><div style=font-size:x-small>' + EscapeHtml(message.events[i].a.join(', ')) + '</div></div></tr>';
+                            x += '<tr><td><img src=images/user-32' + xx + '.png height=32 width=32 style=float:left srcset="images/user-64' + xx + '.png 2x"><td><div style=width:350px;background-color:#' + c + ';border-radius:6px;margin-bottom:4px;padding:4px><div>' + printDateTime(new Date(message.events[i].t)) + ', <b>' + EscapeHtml(m) + '</b></div><div style=font-size:x-small>' + EscapeHtml(message.events[i].a.join(', ')) + '</div></div></tr>';
                         }
                         x += '</table></div>';
                     }
@@ -4514,6 +4533,10 @@
             } else if (args.gotodevicename != null) {
                 var foundNode = null;
                 if (nodes != null) { for (var i in nodes) { if (nodes[i].name == args.gotodevicename) { foundNode = nodes[i]._id; } } }
+                if (foundNode) { gotoDevice(foundNode, xviewmode); goBackStack.push(1); }
+            } else if (args.gotodevicername != null) {
+                var foundNode = null;
+                if (nodes != null) { for (var i in nodes) { if (nodes[i].rname == args.gotodevicername) { foundNode =  nodes[i]._id; } } }
                 if (foundNode) { gotoDevice(foundNode, xviewmode); goBackStack.push(1); }
             } else if (args.gotodeviceip != null) {
                 var foundNode = null;
@@ -4645,9 +4668,9 @@
             x += '<label><input id=d2c2 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('user') >= 0) ? ' checked' : '') + '>' + "Logged in users" + '</label><br />';
             x += '<label><input id=d2c3 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('ip') >= 0) ? ' checked' : '') + '>' + "Agent IP address" + '</label><br />';
             x += '<label><input id=d2c4 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('conn') >= 0) ? ' checked' : '') + '>' + "Server Connectivity" + '</label><br />';
-            x += '<label><input id=d2c7 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('lastseen') >= 0) ? ' checked' : '') + '>' + "Last Seen" + '</label><br />';
             x += '<label><input id=d2c15 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('amthost') >= 0) ? ' checked' : '') + '>' + "Intel&reg; AMT hostname" + '</label><br />';
             x += '<label><input id=d2c17 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('amtstate') >= 0) ? ' checked' : '') + '>' + "Intel&reg; AMT state" + '</label><br />';
+            x += '<label><input id=d2c7 type=checkbox class="form-check-input me-2"' + ((deviceViewSettings.devsCols.indexOf('lastseen') >= 0) ? ' checked' : '') + '>' + "Last Seen" + '</label><br />';
             setModalContent('xxAddAgent', "Device View Columns", x);
             showModal('xxAddAgentModal', 'idx_dlgOkButton', () => onDeviceViewSettingsEx());
         }
@@ -5125,7 +5148,7 @@
                             if (requestedLastConnects == false) { requestedLastConnects = true; meshserver.send({ action: 'lastconnects' }); }
                         }
                         // This height of 1 div at the end to fix a problem in Linux firefox browsers
-                        r = '<table style=width:100%;margin-top:4px cellpadding=0 cellspacing=0><th>' + colums + r + '</tr></table><div style=height:1px></div>';
+                        r = '<table style=width:100%;margin-top:4px;table-layout:fixed cellpadding=0 cellspacing=0><th>' + colums + r + '</tr></table><div style=height:1px></div>';
                     }
                 } else {
                     r += '</table>';
@@ -5381,7 +5404,7 @@
                     }
                 }
 
-                if (node.desc && (deviceViewSettings.devsCols.indexOf('desc') >= 0)) { name = '<div style=float:right' + (stars[node._id] == 1 ? ';padding-right:15px' : '') + '>' + EscapeHtml(node.desc) + '</div><div>' + name + '</div>'; }
+                if (node.desc && (deviceViewSettings.devsCols.indexOf('desc') >= 0)) { name = '<div class="flex-grow-1">' + name + '</div><div style=float:right' + (stars[node._id] == 1 ? ';padding-right:15px' : '') + '>' + EscapeHtml(node.desc) + '</div>'; }
 
                 var collapseName = node.meshid;
                 if (sort == 1) { collapseName = ('pwr:' + (node.pwr ? node.pwr : 0)); }
@@ -5391,7 +5414,7 @@
                 r += '<div class=deviceBarCheckbox><input class="' + node.meshid + ' DeviceCheckbox form-check-input me-2" value=devid_' + node._id + ' type=checkbox onchange=p1devcheck(event) ' + (checkedNodeids[node._id] ? ' checked' : '') + '></div>';
                 r += '<div class=deviceBarIcon onmouseup=gotoDevice(\'' + node._id + '\',null,null,event)><div class="j' + icon + '" style=width:16px;margin-top:1px;margin-left:2px;height:16px></div></div>';
                 r += '<div class=g1 style=height:18px;float:left></div><div class=g2 style=height:18px;float:right></div>';
-                r += '<div class=style10 style=cursor:pointer;font-size:14px;max-height:18px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap title="' + title + '" onmouseup=gotoDevice(\'' + node._id + '\',null,null,event)>' + name + '</div></div>' + devNotify + '</td>';
+                r += '<div class="style10 d-flex align-items-center" style=cursor:pointer;font-size:14px;max-height:18px;text-overflow:ellipsis;overflow:hidden;white-space:nowrap title="' + title + '" onmouseup=gotoDevice(\'' + node._id + '\',null,null,event)>' + name + '</div></div>' + devNotify + '</td>';
 
                 // Use defaults if needed
                 if (deviceViewSettings == null) { deviceViewSettings = {}; }
@@ -5432,9 +5455,8 @@
                 }
                 if (deviceViewSettings.devsCols.indexOf('links') >= 0) { r += '<td style=text-align:center;font-size:x-small>' + getShortRouterLinks(node); } // Links
                 if (deviceViewSettings.devsCols.indexOf('user') >= 0) { r += '<td style=text-align:center>' + getUserShortStr(node); } // User
-                if (deviceViewSettings.devsCols.indexOf('ip') >= 0) { var ip = ''; if (node.mtype == 3) { ip = node.host; } else if (node.ip) { ip = node.ip; } r += '<td style=text-align:center>' + ip; } // IP address
+                if (deviceViewSettings.devsCols.indexOf('ip') >= 0) { var ip = ''; if (node.mtype == 3) { ip = node.host; } else if (node.ip) { ip = node.ip; } r += '<td style=text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis title="' + EscapeHtml(ip) + '">' + EscapeHtml(ip); } // IP address
                 if (deviceViewSettings.devsCols.indexOf('conn') >= 0) { r += '<td style=text-align:center>' + states.join('&nbsp;+&nbsp;'); } // Connectivity
-                if (deviceViewSettings.devsCols.indexOf('lastseen') >= 0) { r += '<td style=text-align:center;font-size:x-small>'; if (node.conn > 0) { r += "Connected"; } else if (node.lastconnect != null) { r += printDateTime(new Date(node.lastconnect)); } }
                 if (deviceViewSettings.devsCols.indexOf('amthost') >= 0) { r += '<td style=text-align:center>' + (((node.intelamt == null) || (node.intelamt.host == null)) ? '' : EscapeHtml(node.intelamt.host)); }
                 if (deviceViewSettings.devsCols.indexOf('amtstate') >= 0) {
                     var amtstate = '';
@@ -5445,6 +5467,7 @@
                     }
                     r += '<td style=text-align:center>' + amtstate;
                 }
+                if (deviceViewSettings.devsCols.indexOf('lastseen') >= 0) { r += '<td style=text-align:center;font-size:x-small>'; if (node.conn > 0) { r += "Connected"; } else if (node.lastconnect != null) { r += printDateTime(new Date(node.lastconnect)); } }
 
                 div.innerHTML = r;
             } else if ((view == 3) || (view == 5)) {
@@ -5683,7 +5706,11 @@
             if (i > 0) { su = u.substring(i + 1); }
             su = EscapeHtml(su);
             if (su.length > 15) { su = su.substring(0, 14) + '&#8230;'; }
-            return '<span title="' + EscapeHtml(u) + '">' + su + '</span>';
+            if (node.lusers && node.lusers.length > 0) {
+                return addKeyLinkConditional(su, EscapeHtml(u) + ' (' + "Locked" + ')', (node.lusers && node.lusers.indexOf(u) >= 0));
+            } else {
+                return '<span title="' + EscapeHtml(u) + '">' + su + '</span>';
+            }
         }
 
         function autoConnectDesktops() { if (Q('autoConnectDesktopCheckbox').checked == true) { connectAllKvmFunction(); } }
@@ -5981,7 +6008,8 @@
         }
 
         function showAmtAcmSetupEx() {
-            meshserver.send({ action: 'amtsetupbin', oldmebxpass: Q('dp1password0').value, newmebxpass: Q('dp1password1').value, baremetal: ((features2 & 0x00000020) && (Q('dp1lanprov').checked)) });
+            var baremetal = ((features2 & 0x00000020) && (currentMesh.mtype == 1) && (serverinfo.amtProvServerMeshId == currentMesh._id) && (Q('dp1lanprov').checked));
+            meshserver.send({ action: 'amtsetupbin', oldmebxpass: Q('dp1password0').value, newmebxpass: Q('dp1password1').value, baremetal: baremetal });
         }
 
         // Display the Intel AMT scanning dialog box
@@ -6152,8 +6180,8 @@
             if (serverinfo.https == true) { portStr = (serverinfo.port == 443) ? '' : (':' + serverinfo.port); } else { portStr = (serverinfo.port == 80) ? '' : (':' + serverinfo.port); }
 
             // Add Linux/macOS binary installer option
-            var binaryInstallAgentsOrder = [6, 5, 10005, 25, 26, 28, 30, 32, 36, 37, 40, 41, 16, 29];
-            var binaryInstallAgents = { 6: 'Linux x86-64', 5: 'Linux x86-32', 10005: 'Apple OSX Universal', 25: 'Linux ARM-HF, Rasberry Pi', 26: 'Linux ARM64-HF', 28: 'Linux MIPS24KC (OpenWRT)', 30: 'FreeBSD x86-64', 32: 'Linux ARM 64 bit (glibc/2.24 NOKVM)', 36: 'OpenWRT x86-64', 37: 'OpenBSD x86-64', 40: 'Linux MIPSEL24KC (OpenWRT)', 41: 'ARMADA/CORTEX-A53/MUSL (OpenWRT)', 16: 'Apple macOS x86-64', 29: 'Apple macOS ARM-64' };
+            var binaryInstallAgentsOrder = [6, 5, 10005, 25, 26, 28, 30, 32, 36, 37, 40, 41, 45, 16, 29];
+            var binaryInstallAgents = { 6 : 'Linux x86-64', 5 : 'Linux x86-32', 10005 : 'Apple OSX Universal', 25 : 'Linux ARM-HF, Rasberry Pi', 26 : 'Linux ARM64-HF', 28: 'Linux MIPS24KC (OpenWRT)', 30 : 'FreeBSD x86-64', 32: 'Linux ARM 64 bit (glibc/2.24 NOKVM)', 36: 'OpenWRT x86-64', 37: 'OpenBSD x86-64', 40: 'Linux MIPSEL24KC (OpenWRT)', 41: 'ARMADA/CORTEX-A53/MUSL (OpenWRT)', 45: 'RISC-V 64bit', 16: 'Apple macOS x86-64', 29: 'Apple macOS ARM-64' };
             for (var i in binaryInstallAgentsOrder) { moreoptions += '<option value="' + binaryInstallAgentsOrder[i] + '">' + binaryInstallAgents[binaryInstallAgentsOrder[i]] + '</option>' }
             x += '<div id="aginsSysTypeDiv">';
             x += addHtmlFormFloating("System Type", '<select id="aginsSysType" onchange="addAgentToMeshClick()"  class="form-select">' + moreoptions + '</select>');
@@ -6615,17 +6643,29 @@
             } else if (op == 107) {
                 // Edit tags
                 var x = "Perform batch device tag operation" + '<br /><br />';
-                x += addHtmlFormFloating("Operation", '<select id=d2deviceop class="form-select-sm me-2"><option value=1>' + "Add tags" + '</option><option value=2>' + "Set tags" + '</option><option value=3>' + "Remove tags" + '</option></select>');
-                x += addHtmlFormFloating("Tags", '<input id=dp10devicevalue class="form-control" maxlength=4096 placeholder="' + "Tag1, Tag2, Tag3" + '" />');
+                x += addHtmlFormFloating("Operation", '<select id=d2deviceop class="form-select"><option value=1>' + "Add tags" + '</option><option value=2>' + "Set tags" + '</option><option value=3>' + "Remove tags" + '</option></select>');
+                x += addHtmlFormFloating("Tags", '<select id=dp10devicevalue multiple class="form-control" maxlength=4096>');
                 // Get a list of all possible device tags
                 var allTags = [], y = '';
                 for (var i in nodes) { if (nodes[i].tags) { for (var j in nodes[i].tags) { if (allTags.indexOf(nodes[i].tags[j]) == -1) { allTags.push(nodes[i].tags[j]); } } } }
                 if (allTags.length > 0) {
                     allTags.sort();
-                    for (var i in allTags) { y += '<span style=padding:4px;background-color:#BBB;border-radius:3px;cursor:pointer onclick=showEditNodeValueDialogAddTag("' + encodeURIComponentEx(allTags[i]) + '")>' + EscapeHtml(allTags[i]) + '</span> '; }
-                    x += '<div style=margin-top:8px;width:370px;line-height:26px;max-height:160px;overflow-y:auto>' + y + '</div>';
+                    for (var i in allTags) {
+                        var tag = EscapeHtml(allTags[i]);
+                        y += '<option>' + EscapeHtml(allTags[i]) + '</option>';
+                    }
                 }
+                x += y + '</select>'
                 setModalContent('xxAddAgent', "Edit Device Tags", x);
+                $('#dp10devicevalue').select2({
+                    theme: 'bootstrap-5',
+                    width: $( this ).data( 'width' ) ? $( this ).data( 'width' ) : $( this ).hasClass( 'w-100' ) ? '100%' : 'style',
+                    placeholder: "Tag1, Tag2, Tag3",
+                    closeOnSelect: false,
+                    allowClear: true,
+                    tokenSeparators: [','],
+                    tags: true
+                });
                 showModal('xxAddAgentModal', 'idx_dlgOkButton', () => d2groupActionFunctionTagsExec());
             } else if (op == 108) {
                 // Device notification
@@ -6705,12 +6745,13 @@
         }
 
         function d2groupActionFunctionTagsExec() {
-            var chkNodeIds = getCheckedDevices(), op = Q('d2deviceop').value, optags = Q('dp10devicevalue').value;
+            var chkNodeIds = getCheckedDevices(), op = Q('d2deviceop').value, optags = [];
+            var tt = $('#dp10devicevalue').select2('data');
+            for (var i in tt) { optags.push(tt[i]['text'].trim()); }
             if (op == 2) { // Set tags
-                for (var i in chkNodeIds) { meshserver.send({ action: 'changedevice', nodeid: chkNodeIds[i], tags: optags }); }
+                for (var i in chkNodeIds) { meshserver.send({ action: 'changedevice', nodeid: chkNodeIds[i], tags: optags.join(',') }); }
             } else {
                 var taggroup = [];
-                optags = optags.split(',');
                 for (var i in optags) { var tname = optags[i].trim(); if ((tname.length > 0) && (tname.length < 64) && (taggroup.indexOf(tname) == -1)) { taggroup.push(tname); } }
                 for (var i in chkNodeIds) {
                     var nodeTags = null, tagChanges = false, n = getNodeFromId(chkNodeIds[i]);
@@ -6856,10 +6897,11 @@
                 if (options.selectedFile == null) {
                     x += '<select id=d2cmdsource onclick=d2runCommandValidate() style=width:100%;margin-bottom:4px class=form-select><option value=0' + ((runopt.source == 0) ? ' selected' : '') + '>' + "Commands from text box" + '</option><option value=1' + ((runopt.source == 1) ? ' selected' : '') + '>' + "Commands from file" + '</option>';
                     if (userinfo.siteadmin & 8) { x += '<option value=2' + ((runopt.source == 2) ? ' selected' : '') + '>' + "Commands from file on server" + '</option>'; }
-                    x += '</select><textarea id=d2runcmd onkeyup=d2runCommandValidate() style=background-color:#fcf3cf;width:100%;height:200px;resize:none;overflow-y:scroll class=form-control>' + (runopt.cmd ? EscapeHtml(decodeURIComponent(runopt.cmd)) : '') + '</textarea>';
+                    x += '</select><textarea id=d2runcmd onkeyup=d2runCommandValidate() style=width:100%;height:200px;resize:none;overflow-y:scroll class=form-control>' + (runopt.cmd ? EscapeHtml(decodeURIComponent(runopt.cmd)) : '') + '</textarea>';
                     x += '<div id=d2runfile style=display:none><input id=d2runfileex class="form-control" type=file onchange=d2runCommandValidate() id=d2localFile name=files onchange=d2runCommandValidate() /></div>';
                     if (userinfo.siteadmin & 8) { x += '<div id=d2runsfile style=display:none><div id=d2serveraction valign=bottom><input type=button id=p2FolderUp disabled="disabled" onclick=d3folderup() value="Up" />&nbsp;<span id=p2CurrentFolder></span></div><div id=d2serverfiles></div></div>'; }
                 }
+                xxdialogTag = options;
                 setModalContent('xxAddAgent', "Run Commands", x);
                 showModal('xxAddAgentModal', 'idx_dlgOkButton', function () {
                     d2groupActionFunctionRunCommands(3, options);
@@ -6978,7 +7020,7 @@
 
         function getDevicesThatMatchFilter(x) {
             var r = [];
-            var userSearch = null, ipSearch = null, groupSearch = null, tagSearch = null, agentTagSearch = null, wscSearch = null, osSearch = null, amtSearch = null, descSearch = null;
+            var userSearch = null, ipSearch = null, groupSearch = null, tagSearch = null, agentTagSearch = null, wscSearch = null, osSearch = null, amtSearch = null, descSearch = null, connectivitySearch = null;
             if (x.startsWith("user:".toLowerCase())) { userSearch = x.substring("user:".length); }
             else if (x.startsWith("u:".toLowerCase())) { userSearch = x.substring("u:".length); }
             else if (x.startsWith("ip:".toLowerCase())) { ipSearch = x.substring("ip:".length); }
@@ -6991,6 +7033,8 @@
             else if (x.startsWith("os:".toLowerCase())) { osSearch = x.substring("os:".length); }
             else if (x.startsWith("amt:".toLowerCase())) { amtSearch = x.substring("amt:".length); }
             else if (x.startsWith("desc:".toLowerCase())) { descSearch = x.substring("desc:".length); }
+            else if (x.startsWith("connectivity:".toLowerCase())) { connectivitySearch = x.substring("connectivity:".length); }
+            else if (x.startsWith("c:".toLowerCase())) { connectivitySearch = x.substring("c:".length); }
             else if (x == 'wsc:ok') { wscSearch = 1; }
             else if (x == 'wsc:noav') { wscSearch = 2; }
             else if (x == 'wsc:noupdate') { wscSearch = 3; }
@@ -7039,6 +7083,35 @@
                         else if (((wscSearch == 2) || (wscSearch == 5)) && (nodes[d].wsc.antiVirus != 'OK')) { r.push(d); }
                         else if (((wscSearch == 3) || (wscSearch == 5)) && (nodes[d].wsc.autoUpdate != 'OK')) { r.push(d); }
                         else if (((wscSearch == 4) || (wscSearch == 5)) && (nodes[d].wsc.firewall != 'OK')) { r.push(d); }
+                    }
+                }
+            } else if (connectivitySearch != null) {
+                // Connectivity search
+                for (var d in nodes) {
+                    if (nodes[d].conn) {
+                        if ((nodes[d].conn & 1) != 0) {
+                            if (nodes[d].mtype == 4) {
+                                if ((nodes[d].porttype == 'PDU') && (connectivitySearch.toLowerCase() == 'switch')) {
+                                    r.push(d);
+                                } else if (connectivitySearch.toLowerCase() == 'ipkvm') {
+                                    r.push(d);
+                                }
+                            } else if (connectivitySearch.toLowerCase() == 'agent') {
+                                r.push(d);
+                            }
+                        }
+                        if (((nodes[d].conn & 2) != 0) && (connectivitySearch.toLowerCase() == 'cira')) { r.push(d); }
+                        else if (((nodes[d].conn & 4) != 0) && (connectivitySearch.toLowerCase() == 'amt')) { r.push(d); }
+                        if (((nodes[d].conn & 8) != 0) && (connectivitySearch.toLowerCase() == 'relay')) { r.push(d); }
+                        if (((nodes[d].conn & 16) != 0) && (connectivitySearch.toLowerCase() == 'mqtt')) { r.push(d); }
+                    }
+                    if (nodes[d].mtype == 3) {
+                        var mesh = meshes[nodes[d].meshid];
+                        if (mesh && mesh.relayid && (connectivitySearch.toLowerCase() == 'relay')) {
+                            r.push(d);
+                        } else if (mesh && (typeof mesh.relayid == 'undefined') && connectivitySearch.toLowerCase() == 'local') {
+                            r.push(d);
+                        }
                     }
                 }
             } else if (x == '*') {
@@ -8155,7 +8228,7 @@
                 // Add node name
                 var nname = EscapeHtml(node.name), nnameEx;
                 if (nname.length == 0) { nname = '<i>' + "None" + '</i>'; }
-                if (((meshrights & 4) != 0) && ((!mesh.flags) || ((mesh.flags & 2) == 0))) { nname = '<span tabindex=0 title="' + "Click here to edit the server-side device name" + '" onclick=showEditNodeValueDialog(0) onkeyup="if (event.key == \'Enter\') showEditNodeValueDialog(0)" role="button">' + nname + ' <i class="fa-solid fa-pencil fa-2xs"/></i></span>'; }
+                if (((meshrights & 4) != 0) && ((!mesh.flags) || ((mesh.flags & 2) == 0 || (mesh.flags & 16)))) { nname = '<span tabindex=0 title="' + "Click here to edit the server-side device name" + '" onclick=showEditNodeValueDialog(0) onkeyup="if (event.key == \'Enter\') showEditNodeValueDialog(0)" role="button">' + nname + ' <i class="fa-solid fa-pencil fa-2xs"/></i></span>'; }
                 nnameEx = nname;
                 if (mesh) { nname += '<span style=color:#AAA;font-size:small> - ' + EscapeHtml(mesh.name) + '</span>'; }
                 QH('p10deviceName', nname);
@@ -9148,7 +9221,8 @@
             x += '<div id=d2modenow>';
             x += addHtmlFormFloating("Expire Time", '<select id=d2inviteExpire class="form-select">' + y + '</select>');
             x += '</div><div id=d2moderange style=display:none>';
-            x += addHtmlFormFloating("Time Range", '<input id=d2timeRangeSelector class="flatpickr form-select" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
+            x += addHtmlFormFloating("Time Range Start", '<input id=d2timeRangeStartSelector class="flatpickr form-select" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
+            x += addHtmlFormFloating("Time Range End", '<input id=d2timeRangeEndSelector class="flatpickr form-select" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
             x += '</div><div id=d2moderecurring style=display:none>';
             x += addHtmlFormFloating("Start Time", '<input id=d2timeStartSelector class="flatpickr form-select" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
             x += addHtmlFormFloating("Duration", '<select id=d2inviteDuration class="form-select">' + z + '</select>');
@@ -9159,14 +9233,24 @@
 
             xxdialogButtons = 3;
             setModalContent('xxAddAgent', "Share Device", x);
-            showModal('xxAddAgentModal', 'idx_dlgOkButton', showShareDeviceEx);
+            showModal('xxAddAgentModal', 'idx_dlgOkButton', () => showShareDeviceEx('', xxdialogTag));
 
             showShareDeviceValidate();
             var tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            var rangeTime = flatpickr('#d2timeRangeSelector', { mode: 'range', enableTime: true, minDate: new Date(), defaultDate: [new Date(), tomorrow], minuteIncrement: 1 });
-            var startTime = flatpickr('#d2timeStartSelector', { enableTime: true, minDate: new Date(), defaultDate: new Date(), minuteIncrement: 1 });
-            xxdialogTag = { range: rangeTime, start: startTime };
+            var rangeStartTime = flatpickr('#d2timeRangeStartSelector', {
+                enableTime: true, minDate: new Date(), defaultDate: new Date(), minuteIncrement: 1,
+                plugins: [new confirmDatePlugin({})],
+                onChange: function(selectedDates, dateStr, instance) {
+                    rangeEndTime.set('minDate', dateStr);
+                    if (rangeEndTime.selectedDates[0] && rangeEndTime.selectedDates[0] < selectedDates[0]) {
+                        rangeEndTime.clear();
+                    }
+                }
+            });
+            var rangeEndTime = flatpickr('#d2timeRangeEndSelector', { enableTime: true, minDate: tomorrow, defaultDate: tomorrow, minuteIncrement: 1, plugins: [new confirmDatePlugin({})] });
+            var startTime = flatpickr('#d2timeStartSelector', { enableTime: true, minDate: new Date(), defaultDate: new Date(), minuteIncrement: 1, plugins: [new confirmDatePlugin({})] });
+            xxdialogTag = { rangeStart: rangeStartTime, rangeEnd: rangeEndTime, start: startTime };
         }
 
         function showShareDeviceValidate() {
@@ -9209,7 +9293,7 @@
             if (Q('d2timeRange').value == 0) {
                 meshserver.send({ action: 'createDeviceShareLink', nodeid: currentNode._id, guestname: Q('d2inviteName').value.trim(), p: q, expire: parseInt(Q('d2inviteExpire').value), consent: consent, viewOnly: viewOnly });
             } else if (Q('d2timeRange').value == 1) {
-                meshserver.send({ action: 'createDeviceShareLink', nodeid: currentNode._id, guestname: Q('d2inviteName').value.trim(), p: q, start: Math.floor(tag.range.selectedDates[0].getTime() / 1000), end: Math.floor(tag.range.selectedDates[1].getTime() / 1000), consent: consent, viewOnly: viewOnly });
+                meshserver.send({ action: 'createDeviceShareLink', nodeid: currentNode._id, guestname: Q('d2inviteName').value.trim(), p: q, start: Math.floor(tag.rangeStart.selectedDates[0].getTime() / 1000), end: Math.floor(tag.rangeEnd.selectedDates[0].getTime() / 1000), consent: consent, viewOnly: viewOnly });
             } else {
                 meshserver.send({ action: 'createDeviceShareLink', nodeid: currentNode._id, guestname: Q('d2inviteName').value.trim(), p: q, start: Math.floor(tag.start.selectedDates[0].getTime() / 1000), expire: parseInt(Q('d2inviteDuration').value), recurring: Q('d2timeRange').value - 1, consent: consent, viewOnly: viewOnly });
             }
@@ -9802,13 +9886,12 @@
             if (v == null) v = '';
             if (mode == 3) {
                 // Get a list of all possible device tags
-                x = '<select id=dp10devicevalue multiple class="form-control" maxlength=' + showEditNodeValueDialog_modes4[mode] + ' class=form-control>';
+                x = '<select id=dp10devicevalue multiple maxlength=' + showEditNodeValueDialog_modes4[mode] + ' class=form-control>';
                 var allTags = [];
                 for (var i in nodes) { if (nodes[i].tags) { for (var j in nodes[i].tags) { if (allTags.indexOf(nodes[i].tags[j]) == -1) { allTags.push(nodes[i].tags[j]); } } } }
                 if (allTags.length > 0) {
                     allTags.sort();
                     for (var i in allTags) {
-                        var tag = EscapeHtml(allTags[i]);
                         y += Array.isArray(v) && v.indexOf(allTags[i]) !== -1 ? '<option selected=selected>' + EscapeHtml(allTags[i]) + '</option>' : '<option>' + EscapeHtml(allTags[i]) + '</option>';
                     }
                 }
@@ -9828,22 +9911,10 @@
                 setModalContent('xxAddAgent', "Edit Device", x);
                 if (Array.isArray(v)) { v = v.join(', '); }
                 Q('dp10devicevalue').value = v;
-                showModal('xxAddAgentModal', 'idx_dlgOkButton', function () {
-                    showEditNodeValueDialogEx(3, mode);
-                });
             }
             p10editdevicevalueValidate();
             showModal('xxAddAgentModal', 'idx_dlgOkButton', function () { showEditNodeValueDialogEx(3, mode); });
             Q('dp10devicevalue').focus();
-        }
-
-        function showEditNodeValueDialogAddTag(t) {
-            var tt = Q('dp10devicevalue').value.split(','), t2 = [];
-            for (var i in tt) { t2.push(tt[i].trim()); }
-            if (t2.indexOf(t) >= 0) return;
-            Q('dp10devicevalue').value += ((Q('dp10devicevalue').value.length == 0) ? '' : ', ') + decodeURIComponent(t);
-            setTimeout(function () { Q('dp10devicevalue').selectionStart = Q('dp10devicevalue').selectionEnd = 90000; }, 0);
-            p10editdevicevalueValidate();
         }
 
         function showEditNodeValueDialogEx(button, mode) {
@@ -10493,7 +10564,7 @@
             var rdpflags = 0;
             for (var i = 1; i < 10; i++) { if ((i != 5) && (Q('d7rdp' + i).checked)) { rdpflags |= (1 << (i - 1)); } }
             desktopsettings.rdpflags = rdpflags;
-            localStorage.setItem('desktopsettings', JSON.stringify(desktopsettings));
+            putstore('desktopsettings', JSON.stringify(desktopsettings));
             applyDesktopSettings();
             updateDesktopButtons();
             if (desktop) {
@@ -10591,7 +10662,7 @@
 
                 // If shift is pressed, enter browser full screen.
                 if (e.shiftKey == true) {
-                    enterBrowserFullscreen(Q('container'));
+                    enterBrowserFullscreen(Q('body'));
                     browserfullscreen = true;
                 }
             } else {
@@ -11358,7 +11429,7 @@
         function drotate(x) { if (!xxdialogMode && desktop != null) { desktop.m.setRotation(desktop.m.rotation + x); deskAdjust(); deskAdjust(); } }
         function stopProcess(id, name) {
             setModalContent('xxAddAgent', "Process Control", format("Stop process #{0} \"{1}\"?", id, name));
-            showModal('xxAddAgentModal', 'idx_dlgOkButton', () => stopProcessEx(3, id));
+            showModal('xxAddAgentModal', 'idx_dlgOkButton', () => stopProcessEx(3, (id + '|' + name)));
             return false;
         }
         function stopProcessEx(buttons, tag) { meshserver.send({ action: 'msg', type: 'pskill', nodeid: currentNode._id, value: tag }); setTimeout(refreshDeskTools, 300); }
@@ -12113,7 +12184,7 @@
                     h += '<input file=999 style=float:left name=fd class=fcb type=checkbox class="form-check-input me-2" onchange=p13setActions() value=\'' + f.nx + '\'>&nbsp;<span style=float:right title="' + title + '">' + right + '</span>';
                     h += '<span><div class=fileIcon' + (f.dt == 'REMOVABLE' ? 5 : (f.dt == 'CDROM' ? 6 : f.t)) + ' onclick=p13folderset("' + encodeURIComponentEx(f.nx) + '")></div><a href=# style=cursor:pointer onclick=\'return p13folderset("' + encodeURIComponentEx(f.nx) + '")\'>';
                     if (isWindowsNode(currentNode) && f.dt && currentNode.volumes && currentNode.volumes[shortname.charAt(0).toUpperCase()] && currentNode.volumes[shortname.charAt(0).toUpperCase()].name) {
-                        h += currentNode.volumes[shortname.charAt(0).toUpperCase()].name + " (" + shortname + ")";
+                        h += currentNode.volumes[shortname.charAt(0).toUpperCase()].name + ' (' + shortname + ')';
                     } else {
                         h += shortname;
                     }
@@ -12150,7 +12221,7 @@
         }
 
         function p13openfilefolder() {
-            setModalContent('xxAddAgent', "Open File/Folder", 'Are you sure you want to open this file/folder on the remote devices desktop ?');
+            setModalContent('xxAddAgent', "Open File/Folder", "Are you sure you want to open this file/folder on the remote devices desktop?");
             showModal('xxAddAgentModal', 'idx_dlgOkButton', () => p13openfilefolderEx());
         }
         function p13openfilefolderEx() {
@@ -12993,7 +13064,7 @@
                     var splitip = node.lastaddr.split(':');
                     if (splitip.length > 2) {
                         // IPv6
-                        x += addDetailItem("Last agent address", node.lastaddr);
+                        x += addDetailItem("Last agent address", '<a href="https://iplocation.com/?ip=' + splitip.slice(0, -1).join(':') + '" rel="noreferrer noopener" target="MeshIPLoopup">' + splitip.slice(0, -1).join(':') + '</a>');
                     } else {
                         // IPv4
                         if (isPrivateIP(node.lastaddr)) {
@@ -13567,7 +13638,17 @@
             else if (e.altKey == true) { meshserver.send({ action: 'uploadagentcore', nodeids: [consoleNode._id], type: 'clear' }); } // Clear the core
             else if (e.ctrlKey == true) { p15uploadCore2(); } // Upload the core from a file
             else {
-                setModalContent('xxAddAgent', "Perform Agent Action", addHtmlFormFloating("Action", '<select id=d3coreMode class="form-select me-2"><option value=1>' + "Upload default server core" + '</option><option value=2>' + "Clear the core" + '</option><option value=6>' + "Upload recovery core" + '</option><option value=7>' + "Upload tiny core" + '</option><option value=3>' + "Upload a core file" + '</option><option value=4>' + "Soft disconnect agent" + '</option><option value=5>' + "Hard disconnect agent" + '</option><option value=8>' + "Restart agent service" + '</select>'));
+                var htmlValue = '<select id=d3coreMode class="form-select me-2">' +
+                    '<option value=1>' + "Upload default server core" + '</option>' +
+                    '<option value=2>' + "Clear the core" + '</option>' +
+                    '<option value=3>' + "Upload a core file" + '</option>' +
+                    '<option value=4>' + "Soft disconnect agent" + '</option>' +
+                    '<option value=5>' + "Hard disconnect agent" + '</option>' +
+                    '<option value=6>' + "Upload recovery core" + '</option>' +
+                    '<option value=7>' + "Upload tiny core" + '</option>' +
+                    '<option value=8>' + "Restart agent service" + '</option>' +
+                    '<option value=9>' + "Force agent update" + '</option></select>';
+                setModalContent('xxAddAgent', "Perform Agent Action", addHtmlFormFloating("Action", htmlValue));
                 showModal('xxAddAgentModal', 'idx_dlgOkButton', p15uploadCoreEx);
             }
         }
@@ -13597,6 +13678,9 @@
             } else if (Q('d3coreMode').value == 8) {
                 // Restart MeshAgent service
                 meshserver.send({ action: 'msg', type: 'console', nodeid: consoleNode._id, value:'service restart' });
+            } else if (Q('d3coreMode').value == 9) {
+                // Update mesh agent
+                meshserver.send({ action: 'updateAgents', nodeids: [consoleNode._id] });
             }
         }
 
@@ -13740,12 +13824,11 @@
                 if (serverinfo.discordUrl) { x += '<div id=d2discordurl style=display:none><br /><a href=' + serverinfo.discordUrl + ' target="_discord">' + "Join this Discord server to receive notifications." + '</a></div>'; }
                 x += '<div id=d2callmebotinfo style=display:none><br /><a href=https://www.callmebot.com/blog/free-api-signal-send-messages/ target="_callmebot">' + "Signal" + '</a>, <a href=https://www.callmebot.com/blog/free-api-whatsapp-messages/ target="_callmebot">' + "Whatsapp" + '</a>, <a href=https://www.callmebot.com/blog/free-api-facebook-messenger/ target="_callmebot">' + "Facebook" + '</a>, <a href=https://www.callmebot.com/blog/telegram-text-messages/ target="_callmebot">' + "Telegram" + '</a></div>';
                 x += '<div id=d2pushoverinfo style=display:none><br /><a href=https://pushover.net/ target="_pushover">' + "Information at Pushover.net" + '</a></div>';
-                console.log(serverinfo.userMsgNftyUrl);
                 x += '<div id=d2ntfyinfo style=display:none><br /><a href="' + (serverinfo.userMsgNftyUrl ? serverinfo.userMsgNftyUrl : 'https://ntfy.sh/') + '" target="_ntfy">' + "Free service at ntfy.sh" + '</a></div>';
                 x += '<div id=d2slackinfo style=display:none><br /><a href=https://api.slack.com/messaging/webhooks target="_slack">' + "Slack Webhook Setup" + '</a></div>';
                 xxdialogTag = 'VerifyMessaging';
                 setModalContent('xxAddAgent', "Messaging Notifications", x);
-                showModal('xxAddAgentModal', 'idx_dlgOkButton', account_manageMessagingAdd());
+                showModal('xxAddAgentModal', 'idx_dlgOkButton', () => account_manageMessagingAdd());
                 Q('d2handleinput').focus();
                 account_manageMessagingValidate();
             }
@@ -13767,7 +13850,7 @@
             else { Q('d2handleinput')['placeholder'] = "Username"; }
             var ok = (Q('d2handleinput').value.length > 0); QE('idx_dlgOkButton', ok); if ((x == 1) && ok) { dialogclose(1); }
         }
-        function account_manageMessagingAdd() { if (Q('d2handleinput').value.length == 0) return; QE('d2handleinput', false); meshserver.send({ action: 'verifyMessaging', service: Q('d2serviceselect').value, handle: Q('d2handleinput').value }); }
+        function account_manageMessagingAdd() { if (Q('d2handleinput').value.length == 0) return; QE('d2handleinput', false); meshserver.send({ action: 'verifyMessaging', service: Q('d2serviceselect').value, handle: Q('d2handleinput').value }); return false; }
         function account_manageMessagingConfirm(b, tag) { meshserver.send({ action: 'confirmMessaging', code: Q('d2phoneCodeInput').value, cookie: tag }); }
         function account_manageMessagingRemove() { if (Q('d2delPhone').checked) { meshserver.send({ action: 'removeMessaging' }); } }
 
@@ -13811,7 +13894,7 @@
             if (xxdialogMode || (userinfo.otpsecret == 1) || ((features & 4096) == 0)) return;
             xxdialogTag = 'otpauth-request';
             setModalContent('xxAddAgent', "Authenticator App", ('<div id=d2optinfo>' + "Loading..." + '</div>'));
-            showModal('xxAddAgentModal', 'idx_dlgOkButton', function () { meshserver.send({ action: 'otpauth-setup', secret: Q('d2optsecret').attributes.secret.value, token: Q('d2otpauthinput').value }); });
+            showModal('xxAddAgentModal', 'idx_dlgOkButton', function () { meshserver.send({ action: 'otpauth-setup', secret: Q('d2optsecret').attributes.secret.value, token: Q('d2otpauthinput').value }); return false; });
             meshserver.send({ action: 'otpauth-request' });
         }
 
@@ -13828,8 +13911,7 @@
         }
 
         function account_manageOtp(action) {
-            if ((xxdialogMode == 2) && (xxdialogTag == 'otpauth-manage')) { dialogclose(0); }
-            if (xxdialogMode || ((features & 4096) == 0)) return false;
+            if ((features & 4096) == 0) return false;
             if (count2factoraAuths() > 0) { meshserver.send({ action: 'otpauth-getpasswords', subaction: action }); }
             return false;
         }
@@ -13897,6 +13979,7 @@
                 showModal('xxAddAgentModal', 'idx_dlgOkButton');
             } else if (type == 3) {
                 meshserver.send({ action: 'webauthn-startregister', name: name });
+                return false;
             }
         }
 
@@ -14262,7 +14345,7 @@
                 x += '<div id=d2devrelaydiv style=display:none>';
                 relayDevices.sort(nameSort);
                 var relayDevices2 = [];
-                for (var i in relayDevices) { relayDevices2.push('<option value="' + relayDevices[i]._id + '">' + EscapeHtml(relayDevices[i].name) + '</option>'); }
+                for (var i in relayDevices) { relayDevices2.push('<option value="' + relayDevices[i]._id + '">' + EscapeHtml(relayDevices[i].name) + ' (' + EscapeHtml(relayDevices[i].meshnamel) + ')' + '</option>'); }
                 x += addHtmlFormFloating("Relay Device", '<select id=d2devrelay onchange=account_validateMeshCreate() onkeyup=account_validateMeshCreate(event,2) class=form-select >' + relayDevices2.join('') + '</select>');
                 x += '</div>';
             }
@@ -14576,7 +14659,7 @@
             if (((currentMesh.mtype == 3) || (currentMesh.mtype == 4)) && (currentMesh.relayid != null)) {
                 var relayName = '<i>' + "Unknown" + '</i>';
                 var relayNode = getNodeFromId(currentMesh.relayid);
-                if (relayNode != null) { relayName = EscapeHtml(relayNode.name); }
+                if (relayNode != null) { relayName = EscapeHtml(relayNode.name) + ' (' + EscapeHtml(relayNode.meshnamel) + ')'; }
                 x += addHtmlValue("Relay Device", addLinkConditional(relayName, 'p20editmeshrelay()', (meshrights & 1) != 0));
             }
 
@@ -14603,6 +14686,8 @@
                 if (currentMesh.flags) {
                     if (currentMesh.flags & 1) { meshFeatures.push("Auto-Remove"); }
                     if (currentMesh.flags & 2) { meshFeatures.push((currentMesh.mtype == 4) ? "Port Name Sync" : "Hostname Sync"); }
+                    if (currentMesh.flags & 8) { meshFeatures.push("prefer --agentname"); }
+                    if (currentMesh.flags & 16) { meshFeatures.push("allow override"); }
                     if ((serverinfo.devGroupSessionRecording == 1) && (currentMesh.flags & 4)) { meshFeatures.push("Record Sessions"); }
                 }
                 if ((typeof currentMesh.expireDevs == 'number') && (currentMesh.expireDevs > 0)) { meshFeatures.push("Remove inactive"); }
@@ -15012,7 +15097,7 @@
                 showModal('xxAddAgentModal', 'idx_dlgOkButton');
             } else {
                 var relayDevices2 = [];
-                for (var i in relayDevices) { relayDevices2.push('<option value="' + (relayDevices[i]._id + '"' + ((currentMesh.relayid == relayDevices[i]._id) ? ' selected' : '')) + '>' + EscapeHtml(relayDevices[i].name) + '</option>'); }
+                for (var i in relayDevices) { relayDevices2.push('<option value="' + (relayDevices[i]._id + '"' + ((currentMesh.relayid == relayDevices[i]._id) ? ' selected' : '')) + '>' + EscapeHtml(relayDevices[i].name) + ' (' + EscapeHtml(relayDevices[i].meshnamel) + ')' + '</option>'); }
                 var x = addHtmlFormFloating("Relay Device", '<select id=d2devrelay class="form-select">' + relayDevices2.join('') + '</select>');
                 setModalContent('xxAddAgent', "Edit Device Group", x);
                 showModal('xxAddAgentModal', 'idx_dlgOkButton', p20editmeshrelayEx);
@@ -15119,6 +15204,10 @@
             }
             if ((currentMesh.mtype == 2) || (currentMesh.mtype == 4)) {
                 x += '<div class="form-check"><label><input type=checkbox id=d20flag2 class="form-check-input me-2" onchange=p20editmeshfeaturesValidate() ' + ((flags & 2) ? 'checked' : '') + '>' + ((currentMesh.mtype == 4) ? "Sync server device name to port name" : "Sync server device name to hostname") + '</label><br></div>';
+                if (currentMesh.mtype == 2) {
+                    x += '<div style="margin-left:12px"><label><input type=checkbox id=d20flag8 class="form-check-input me-2" onchange=p20editmeshfeaturesValidate() ' + ((flags & 8) ? 'checked' : '') + '>' + "Prefer value of --agentName" + '</label><br></div>';
+                    x += '<div style="margin-left:12px"><label><input type=checkbox id=d20flag16 class="form-check-input me-2" onchange=p20editmeshfeaturesValidate() ' + ((flags & 16) ? 'checked' : '') + '>' + "Allow to override server device name until next connection" + '</label><br></div>';
+                }
                 x += '<div class="form-check"><label><input type=checkbox id=d20flag1 class="form-check-input me-2" onchange=p20editmeshfeaturesValidate() ' + ((flags & 1) ? 'checked' : '') + '>' + "Remove device on disconnect" + '</label><br></div>';
             }
             x += '<div class="form-check"><label><input type=checkbox id=d20expireDevice class="form-check-input me-2" onchange=p20editmeshfeaturesValidate() ' + ((expire > 0) ? 'checked' : '') + '>' + "Automatically remove inactive devices" + '</label><br></div>';
@@ -15140,6 +15229,16 @@
         function p20editmeshfeaturesValidate() {
             var flags = 0, ok = true;
             if (((currentMesh.mtype == 2) || (currentMesh.mtype == 4)) && (Q('d20flag1').checked)) { flags += 1; }
+            if (currentMesh.mtype == 2) {
+                if (Q('d20flag2').checked) {
+                    flags += 2;
+                    if (event.currentTarget.id == 'd20flag2') { Q('d20flag8').checked = true; Q('d20flag16').checked = true; }
+                }
+                for (const flag of [8, 16]) {
+                    const element = Q('d20flag' + flag);
+                    if ((element.checked = element.checked && !(element.disabled = !(flags & 2)))) { flags += flag; }
+                }
+            }
             QE('d20expireDevice', (flags & 1) == 0);
             var x = ((flags & 1) == 0) && Q('d20expireDevice').checked;
             QV('d20expireDeviceDev', x);
@@ -15152,6 +15251,8 @@
             if ((currentMesh.mtype == 2) || (currentMesh.mtype == 4)) {
                 if (Q('d20flag1').checked) { flags += 1; }
                 if (Q('d20flag2').checked) { flags += 2; }
+                if (Q('d20flag8').checked) { flags += 8; }
+                if (Q('d20flag16').checked) { flags += 16; }
             }
             if ((serverinfo.devGroupSessionRecording == 1) && (currentMesh.mtype != 4)) { if (Q('d20flag4').checked) { flags += 4; } }
             var expireDevs = 0;
@@ -16325,7 +16426,7 @@
             16: "Started file management session \"{0}\" from {1} to {2}",
             17: "Processing console command: \"{0}\"",
             18: "Displaying message box, title=\"{0}\", message=\"{1}\"",
-            19: "Killing process {0}",
+            19: "Killing process {0} ({1})",
             20: "Opening: {0}",
             21: "Getting clipboard content, {0} byte(s)",
             22: "Setting clipboard content, {0} byte(s)",
@@ -16467,7 +16568,9 @@
             158: "Displaying alert box, title=\"{0}\", message=\"{1}\"",
             159: "Device Powered On",
             160: "Enabled Duo two-factor authentication",
-            161: "Disabled Duo two-factor authentication"
+            161: "Disabled Duo two-factor authentication",
+            162: "Started messenger session \"{0}\" from {1} to {2}",
+            163: "Removed device {0} from user group {1}"
         };
 
         var eventsShortMessageId = {
@@ -18626,7 +18729,7 @@
                 if (p52recordings != null) {
                     var recdate = null;
                     for (var i in p52recordings) {
-                        var rec = p52recordings[i], rect = new Date(rec.time), day = printDate(rect);
+                        var rec = p52recordings[i], rect = new Date(rec.startTime), day = printDate(rect);
                         if (day != recdate) { recdate = day; x += '<tr><td class=userTableHeader colspan=4>' + day; }
                         x += addRecordingHtml(i, rec);
                     }
@@ -18644,7 +18747,7 @@
         function addRecordingHtml(i, rec) {
             var sessionLengthStr = '';
             if (rec.lengthTime) { sessionLengthStr = pad2(Math.floor(rec.lengthTime / 3600)) + ':' + pad2(Math.floor((rec.lengthTime % 3600) / 60)) + ':' + pad2(Math.floor(rec.lengthTime % 60)); }
-            var sessionStartStr = printTime(new Date(rec.time));
+            var sessionStartStr = printTime(new Date(rec.startTime));
             if (rec.sessionStart) { sessionStartStr = printTime(new Date(rec.sessionStart)); }
             var sessionSize = '';
             if (rec.size) { sessionSize = format("{0} Kb", Math.round(rec.size / 1024)); }
@@ -18674,6 +18777,9 @@
             if (rec.protocol == 1) { sessionName += ' - ' + "Terminal Session"; }
             if (rec.protocol == 2) { sessionName += ' - ' + "Desktop Session"; }
             if (rec.protocol == 5) { sessionName += ' - ' + "File Transfer"; }
+            if (rec.protocol == 6) { sessionName += ' - ' + "Admin PowerShell"; }
+            if (rec.protocol == 8) { sessionName += ' - ' + "User Shell"; }
+            if (rec.protocol == 9) { sessionName += ' - ' + "User PowerShell"; }
             if (rec.protocol == 100) { sessionName += ' - ' + "Intel&reg; AMT WSMAN"; }
             if (rec.protocol == 101) { sessionName += ' - ' + "Intel&reg; AMT Redirection"; }
             if (rec.protocol == 200) { sessionName += ' - ' + "Messenger"; }
@@ -18704,8 +18810,12 @@
                 if (rec.protocol == 1) { protocolStr = "Terminal"; }
                 if (rec.protocol == 2) { protocolStr = "Desktop"; }
                 if (rec.protocol == 5) { protocolStr = "Files"; }
+                if (rec.protocol == 6) { protocolStr = "Admin PowerShell"; }
+                if (rec.protocol == 8) { protocolStr = "User Shell"; }
+                if (rec.protocol == 9) { protocolStr = "User PowerShell"; }
                 if (rec.protocol == 100) { protocolStr = "Intel&reg; AMT WSMAN"; }
                 if (rec.protocol == 101) { protocolStr = "Intel&reg; AMT Redirection"; }
+                if (rec.protocol == 200) { protocolStr = "Messenger"; }
                 x += addHtmlValue4("Protocol", protocolStr);
             }
             x += addHtmlValue4("Status", (rec.present == 1) ? "Present on server" : "Not on server");
@@ -18713,7 +18823,7 @@
             if (rec.meshname) { x += addHtmlValue4("Device Group", EscapeHtml(rec.meshname)); }
             if (rec.size) { x += addHtmlValue4("Size", format("{0} bytes", rec.size)); }
             if (rec.startTime) { x += addHtmlValue4("Start Time", printTime(new Date(rec.startTime))); }
-            if (rec.time) { x += addHtmlValue4("End Time", printTime(new Date(rec.time))); }
+            if (rec.startTime && rec.lengthTime) { x += addHtmlValue4("End Time", printTime(new Date(rec.startTime + (rec.lengthTime * 1000)))); } 
             if (rec.lengthTime) { x += addHtmlValue4("Duration", pad2(Math.floor(rec.lengthTime / 3600)) + ':' + pad2(Math.floor((rec.lengthTime % 3600) / 60)) + ':' + pad2(Math.floor(rec.lengthTime % 60))); }
             if (rec.multiplex == true) { x += addHtmlValue4("Multiplexor", "Enabled"); }
             if (rec.userids) { for (var i in rec.userids) { x += addHtmlValue4("User", rec.userids[i].split('/')[2]); } }
@@ -18886,7 +18996,8 @@
             x += '</div>';
 
             x += '<div id=d2timeRangeDiv style=display:none>';
-            x += addHtmlFormFloating("Time Range", '<input id=d2timeRangeSelector class="flatpickr form-control" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
+            x += addHtmlFormFloating("Time Range Start", '<input id=d2timeRangeStartSelector class="flatpickr form-control" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
+            x += addHtmlFormFloating("Time Range End", '<input id=d2timeRangeEndSelector class="flatpickr form-control" type="text" placeholder="' + "Select Date & Time..." + '" data-id="altinput">');
             x += '</div>';
 
             x += '<div id=d2showTrafficDiv style=display:none>';
@@ -18894,13 +19005,22 @@
             x += '</div>';
 
             setModalContent('xxAddAgent', "Generate Report", x);
-            showModal('xxAddAgentModal', 'idx_dlgOkButton', generateReportDialogEx);
+            showModal('xxAddAgentModal', 'idx_dlgOkButton', () => generateReportDialogEx('', xxdialogTag));
             generateReportDialogValidate();
 
             var lastWeek = new Date();
             lastWeek.setDate(lastWeek.getDate() - 7);
-            var rangeTime = flatpickr('#d2timeRangeSelector', { mode: 'range', enableTime: true, maxDate: new Date(), defaultDate: [lastWeek, new Date()], minuteIncrement: 1 });
-            xxdialogTag = rangeTime;
+            var rangeStartTime = flatpickr('#d2timeRangeStartSelector', {
+                enableTime: true, maxDate: new Date(), defaultDate: lastWeek, minuteIncrement: 1, plugins: [new confirmDatePlugin({})],
+                onChange: function(selectedDates, dateStr, instance) {
+                    rangeEndTime.set('minDate', dateStr);
+                    if (rangeEndTime.selectedDates[0] && rangeEndTime.selectedDates[0] < selectedDates[0]) {
+                        rangeEndTime.clear();
+                    }
+                }
+            });
+            var rangeEndTime = flatpickr('#d2timeRangeEndSelector', { enableTime: true, maxDate: new Date(), defaultDate: new Date(), minuteIncrement: 1, plugins: [new confirmDatePlugin({})] });
+            xxdialogTag = { rangeStart: rangeStartTime, rangeEnd: rangeEndTime };
         }
 
         function generateReportDialogValidate() {
@@ -18915,8 +19035,8 @@
         function generateReportDialogEx(b, tag) {
             var start, end;
             if (Q('d2timeRange').value == 0) {
-                end = Math.floor(tag.selectedDates[1].getTime() / 1000);
-                start = Math.floor(tag.selectedDates[0].getTime() / 1000);
+                end = Math.floor(tag.rangeEnd.selectedDates[0].getTime() / 1000);
+                start = Math.floor(tag.rangeStart.selectedDates[0].getTime() / 1000);
             } else {
                 end = Math.floor(new Date() / 1000);
                 start = new Date();
@@ -19039,6 +19159,9 @@
                 if (v == 1) return "Terminal";
                 if (v == 2) return "Desktop";
                 if (v == 5) return "Files";
+                if (v == 6) return "Admin PowerShell";
+                if (v == 8) return "User Shell";
+                if (v == 9) return "User PowerShell";
                 if (v == 100) return "AMT-WSMAN";
                 if (v == 101) return "AMT-Redir";
                 if (v == 200) return "Messenger";
@@ -19050,7 +19173,7 @@
             }
             if (f == 'seconds') {
                 var seconds = v % 60;
-                var minutes = Math.floor(v / 60) & 60;
+                var minutes = Math.floor(v / 60) % 60;
                 var hours = Math.floor(v / 3600);
                 return zeroPad(hours, 2) + ':' + zeroPad(minutes, 2) + ':' + zeroPad(seconds, 2);
             }
@@ -19140,7 +19263,17 @@
                 if (v == 1) return "Terminal";
                 if (v == 2) return "Desktop";
                 if (v == 5) return "Files";
-                return "Unknown";
+                if (v == 6) return "Admin PowerShell";
+                if (v == 8) return "User Shell";
+                if (v == 9) return "User PowerShell";
+                if (v == 100) return "AMT-WSMAN";
+                if (v == 101) return "AMT-Redir";
+                if (v == 200) return "Messenger";
+                if (v == 201) return "Web-RDP";
+                if (v == 202) return "Web-SSH";
+                if (v == 203) return "Web-SFTP";
+                if (v == 204) return "Web-VNC";
+                return "Unknown" + ' (' + v + ')';
             }
             if (f == 'node') {
                 var node = getNodeFromId(v);
@@ -19426,6 +19559,7 @@
                 InvalidDeviceGroupType: "Invalid Device Group Type",
                 DuplicateAgent: "Duplicate Agent",
                 ConnectedIntelAMT: "Connected Intel&reg; AMT",
+                ConnectedIntelAMTCira: "Connected Intel&reg; AMT CIRA",
                 RelayErrors: "Relay Errors",
                 UserAccounts: "User Accounts",
                 DeviceGroups: "Device Groups",
@@ -19514,7 +19648,8 @@
                 serverTimelineConfig.data.datasets[1].data.push({ x: stats.time, y: stats.conn.cu });
                 serverTimelineConfig.data.datasets[2].data.push({ x: stats.time, y: stats.conn.us });
                 serverTimelineConfig.data.datasets[3].data.push({ x: stats.time, y: stats.conn.rs });
-                if (stats.conn.am != null) { serverTimelineConfig.data.datasets[4].data.push({ x: stats.time, y: stats.conn.am }); }
+                serverTimelineConfig.data.datasets[4].data.push({ x: stats.time, y: stats.conn.am });
+                if (stats.conn.amc != null) { serverTimelineConfig.data.datasets[5].data.push({ x: stats.time, y: stats.conn.amc }); }
             } else if (chartType == 1) { // Memory
                 serverTimelineConfig.data.datasets[0].data.push({ x: stats.time, y: stats.mem.external / (1024 * 1024) });
                 serverTimelineConfig.data.datasets[1].data.push({ x: stats.time, y: stats.mem.heapUsed / (1024 * 1024) });
@@ -19561,7 +19696,8 @@
                         { label: "Users", data: [], backgroundColor: 'rgba(16, 84, 158, .1)', borderColor: 'rgb(16, 84, 158)', fill: true },
                         { label: "User Sessions", data: [], backgroundColor: 'rgba(255, 99, 132, .1)', borderColor: 'rgb(255, 99, 132)', fill: true },
                         { label: "Relay Sessions", data: [], backgroundColor: 'rgba(39, 158, 16, .1)', borderColor: 'rgb(39, 158, 16)', fill: true },
-                        { label: "Intel AMT", data: [], backgroundColor: 'rgba(134, 16, 158, .1)', borderColor: 'rgb(134, 16, 158)', fill: true }
+                        { label: "Intel AMT", data: [], backgroundColor: 'rgba(134, 16, 158, .1)', borderColor: 'rgb(134, 16, 158)', fill: true },
+                        { label: "Intel AMT CIRA", data: [], backgroundColor: 'rgba(255, 155, 0, .1)', borderColor: 'rgb(255, 155, 0)', fill: true }
                     ]
                 };
                 for (var i = 0; i < serverTimelineStats.length; i++) {
@@ -19578,13 +19714,15 @@
                         data.datasets[2].data.push({ x: serverTimelineStats[i].time - 1, y: NaN });
                         data.datasets[3].data.push({ x: serverTimelineStats[i].time - 1, y: NaN });
                         data.datasets[4].data.push({ x: serverTimelineStats[i].time - 1, y: NaN });
+                        data.datasets[5].data.push({ x: serverTimelineStats[i].time - 1, y: NaN });
                     }
                     if (serverTimelineStats[i].conn) {
                         data.datasets[0].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.ca });
                         data.datasets[1].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.cu });
                         data.datasets[2].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.us });
                         data.datasets[3].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.rs });
-                        if (serverTimelineStats[i].conn.am != null) { data.datasets[4].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.am }); }
+                        data.datasets[4].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.am });
+                        if (serverTimelineStats[i].conn.amc != null) { data.datasets[5].data.push({ x: serverTimelineStats[i].time, y: serverTimelineStats[i].conn.amc }); }
                     }
                 }
             } else if (chartType == 1) { // Memory
@@ -20574,6 +20712,7 @@
             if (currentNode && currentNode.links && currentNode.links[userid] && currentNode.links[userid].name != null) { return (currentNode.links[userid].name + guestname); }
             if (userid == userinfo._id) { return (userinfo.name + guestname); }
             if (nodes) { for (var a in nodes) { if (nodes[a].links) { for (var b in nodes[a].links) { if (nodes[a].links[b].name && b == userid) return (nodes[a].links[b].name + guestname); } } } }
+            if (meshes) { for (var a in meshes) { if (meshes[a].links) { for (var b in meshes[a].links) { if (meshes[a].links[b].name && b == userid) return (meshes[a].links[b].name + guestname); } } } }
             return (useridsplit[2] + guestname);
         }
         function round(value, precision) { var multiplier = Math.pow(10, precision || 0); return Math.round(value * multiplier) / multiplier; }
